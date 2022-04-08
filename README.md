@@ -8,5 +8,5 @@ sudo docker build -t tka-andrew/path-finding-visualizer:latest .
 
 ## To run the docker image
 ```
-sudo docker run tka-andrew/path-finding-visualizer:latest
+./runDockerFile.sh
 ```
