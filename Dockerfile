@@ -6,6 +6,7 @@ ENV TZ=Etc/UTC
 
 # Install CMake
 RUN apt-get update && apt-get install build-essential cmake -y --no-install-recommends
+RUN apt install libgtk-3-dev libwxgtk3.0-gtk3-dev libcanberra-gtk-module libcanberra-gtk3-module -y --no-install-recommends
 
 RUN mkdir -p /src/PathFindingVisualizer/build
 COPY . /src/PathFindingVisualizer/
