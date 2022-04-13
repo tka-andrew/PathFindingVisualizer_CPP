@@ -5,12 +5,21 @@ This is mainly to visualize the path finding algorithm written in CPP.
 
 ### To build this image
 ```
-sudo docker build -t tka-andrew/path-finding-visualizer:latest .
+./builldDockerImage.sh
 ```
 
 ### To run the docker image
 ```
 ./runDockerFile.sh
+```
+
+## DEVELOPMENT MODE
+
+### Install libwxgtk3.0-dev binaries
+```
+sudo apt-get update -y
+sudo apt-get install -y libwxgtk3.0-gtk3-dev  (PS: for Ubuntu 20.04)
+sudo apt-get install -y libwxgtk3.0-dev  (PS: for other versions of Ubuntu)
 ```
 
 ## References

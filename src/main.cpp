@@ -1,13 +1,3 @@
-// #include "iostream"
-
-// int main()
-// {
-//     std::cout << "Hello World!\n";
-//     return 0;
-// }
-
-// wxWidgets "Hello world" Program
-// For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
