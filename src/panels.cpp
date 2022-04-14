@@ -93,7 +93,35 @@ void RightPanel::OnUnsetWall(wxCommandEvent &WXUNUSED(event))
 
 void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
 {
-    wxLogMessage("OnSetStartingPoint");
+    MainFrame *mainFrame = (MainFrame *) m_parent->GetParent();
+
+    if (mainFrame->startingPointDefined)
+    {
+        int previousRow = mainFrame->startingPoint[0];
+        int previousCol = mainFrame->startingPoint[1];
+        mainFrame->m_lp->grid->SetCellBackgroundColour(previousRow, previousCol, wxColour(255,255,255)); // white
+    }
+
+    wxGridCellCoordsArray topLeftCells = mainFrame->m_lp->grid->GetSelectionBlockTopLeft();
+
+    if (topLeftCells.Count() > 0)
+    {
+        // only use the first cell even if multiple cells selected
+        int row = topLeftCells[0].GetRow();
+        int col = topLeftCells[0].GetCol();
+        
+        mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(0,255,0)); // green
+        mainFrame->m_lp->grid->ClearSelection();
+
+        // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
+        // To repaint the grid immediately
+        mainFrame->m_lp->grid->ForceRefresh();
+
+        // update memory
+        mainFrame->startingPointDefined = true;
+        mainFrame->startingPoint[0] = row;
+        mainFrame->startingPoint[1] = col;
+    }
 }
 
 void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))

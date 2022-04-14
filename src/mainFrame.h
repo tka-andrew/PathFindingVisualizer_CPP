@@ -16,6 +16,10 @@ public:
     LeftPanel *m_lp;
     RightPanel *m_rp;
     wxPanel *m_parent;
+    int startingPoint[2] = {-1, -1};
+    int destinationPoint[2] = {-1, -1};
+    bool startingPointDefined = false;
+    bool destinationPointDefined = false;
 
 private:
 
