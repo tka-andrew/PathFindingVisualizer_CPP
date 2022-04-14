@@ -6,6 +6,7 @@ project(PathFindingVisualizer VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# REFERENCE: https://docs.wxwidgets.org/3.0/page_libs.html
 # REFERENCE: https://docs.wxwidgets.org/trunk/overview_cmake.html
 # adv component is needed for wxGrid libraries
 find_package(wxWidgets REQUIRED COMPONENTS net core base adv)
