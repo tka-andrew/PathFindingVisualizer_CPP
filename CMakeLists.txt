@@ -14,6 +14,7 @@ include(${wxWidgets_USE_FILE})
 file( GLOB cppFILES
     src/main.cpp
     src/mainFrame.cpp
+    src/panels.cpp
 )
 
 # add the executable
