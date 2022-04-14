@@ -7,7 +7,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # REFERENCE: https://docs.wxwidgets.org/trunk/overview_cmake.html
-find_package(wxWidgets REQUIRED COMPONENTS net core base)
+# adv component is needed for wxGrid libraries
+find_package(wxWidgets REQUIRED COMPONENTS net core base adv)
 include(${wxWidgets_USE_FILE})
 
 file( GLOB cppFILES
