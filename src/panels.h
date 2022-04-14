@@ -21,11 +21,13 @@ public:
     RightPanel(wxPanel *parent);
 
     void OnSetWall(wxCommandEvent & event);
+    void OnUnsetWall(wxCommandEvent & event);
     void OnSetStartingPoint(wxCommandEvent & event);
     void OnSetDestinationPoint(wxCommandEvent & event);
     void OnStartSimulation(wxCommandEvent & event);
 
     wxButton *m_setWall;
+    wxButton *m_unsetWall;
     wxButton *m_setStartingPoint;
     wxButton *m_setDestinationPoint;
     wxButton *m_startSimulation;
@@ -33,6 +35,7 @@ public:
 };
 
 const int ID_SET_WALL = 101;
+const int ID_UNSET_WALL = 102;
 const int ID_SET_STARTING_POINT = 103;
 const int ID_SET_DESTINATION_POINT = 104;
 const int ID_START_SIMULATION = 105;
