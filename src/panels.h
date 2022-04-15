@@ -12,6 +12,8 @@ public:
     LeftPanel(wxPanel *parent);
     wxGrid *grid;
     wxPanel *m_parent;
+    int gridRow = 40;
+    int gridCol = 60;
 };
 
 class RightPanel : public wxPanel
