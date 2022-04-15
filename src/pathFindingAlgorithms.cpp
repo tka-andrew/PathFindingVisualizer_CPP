@@ -11,6 +11,7 @@ typedef std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, std
 
 std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(int source[2], int target[2], int gridRow, int gridCol, MainFrame *mainFramePtr)
 {
+    wxGrid *gridPtr = mainFramePtr->m_lp->grid;
 
     // VARIABLLE DECLARATION
     std::vector<std::vector<int>> minTravelCost(gridRow, std::vector<int>(gridCol, INT_MAX));
@@ -37,8 +38,8 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
         if (curR == target[0] && curC == target[1])
         {
             // paint it back to red
-            mainFramePtr->m_lp->grid->SetCellBackgroundColour(curR, curC, wxColour(255, 0, 0)); // red
-            mainFramePtr->m_lp->grid->ForceRefresh();
+            gridPtr->SetCellBackgroundColour(curR, curC, wxColour(255, 0, 0)); // red
+            gridPtr->ForceRefresh();
             break;
         }
         if (visited[curR][curC])
@@ -62,6 +63,12 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
                 continue;
             }
 
+            // skip if it is a wall
+            if (gridPtr->GetCellBackgroundColour(newR, newC) == wxColor(0, 0, 0))
+            {
+                continue;
+            }
+
             pointExplored++;
 
             int newTravelCost = curTravelCost + 1;
@@ -71,12 +78,12 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
                 prev[newR][newC] = {curR, curC};
                 minHeap.push({newTravelCost, newR, newC});
 
-                mainFramePtr->m_lp->grid->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
-                mainFramePtr->m_lp->grid->ForceRefresh();
+                gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
+                gridPtr->ForceRefresh();
             }
         }
         // wxMilliSleep(10);
-        mainFramePtr->m_lp->grid->ForceRefresh();
+        gridPtr->ForceRefresh();
     }
     return {pointExplored, minTravelCost[target[0]][target[1]], prev};
 }
