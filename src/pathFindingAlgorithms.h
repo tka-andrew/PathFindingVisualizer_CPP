@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <climits>
 
-std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(int source[2], int target[2], int gridRow, int gridCol, MainFrame *mainFramePtr);
+// return: numOfCellsVisited, minTravelCost, prev
+std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr);
 
 #endif // PATH_FINDING_ALGO_H

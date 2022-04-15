@@ -24,8 +24,10 @@ RightPanel::RightPanel(wxPanel *parent)
                                          wxPoint(10, 110));
     m_startSimulation = new wxButton(this, ID_START_SIMULATION, wxT("Start Simulation"),
                                      wxPoint(10, 160));
-    m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
+    m_clearSearch = new wxButton(this, ID_CLEAR_SEARCH, wxT("Clear Search"),
                                      wxPoint(10, 210));
+    m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
+                                     wxPoint(10, 260));
     Connect(ID_SET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnSetWall));
     Connect(ID_UNSET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -36,6 +38,8 @@ RightPanel::RightPanel(wxPanel *parent)
             wxCommandEventHandler(RightPanel::OnSetDestinationPoint));
     Connect(ID_START_SIMULATION, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnStartSimulation));
+    Connect(ID_CLEAR_SEARCH, wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler(RightPanel::OnClearSearch));
     Connect(ID_RESET_GRID, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnResetGrid));
 
@@ -46,6 +50,7 @@ RightPanel::RightPanel(wxPanel *parent)
     sizer->Add(m_setStartingPoint, 0, wxEXPAND, 0);
     sizer->Add(m_setDestinationPoint, 0, wxEXPAND, 0);
     sizer->Add(m_startSimulation, 0, wxEXPAND, 0);
+    sizer->Add(m_clearSearch, 0, wxEXPAND, 0);
     sizer->Add(m_resetGrid, 0, wxEXPAND, 0);
     sizer->SetSizeHints(this);
     this->SetSizer(sizer);
@@ -135,8 +140,7 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
 
         // update memory
         mainFrame->startingPointDefined = true;
-        mainFrame->startingPoint[0] = row;
-        mainFrame->startingPoint[1] = col;
+        mainFrame->startingPoint = {row, col};
     }
 }
 
@@ -183,17 +187,12 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         return;
     }
 
-    int startingPoint[2]{mainFrame->startingPoint[0], mainFrame->startingPoint[1]};
-    int destinationPoint[2]{mainFrame->destinationPoint[0], mainFrame->destinationPoint[1]};
-    typedef std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, std::greater<std::vector<int>>> MinHeap;
-
-    std::vector<std::vector<int>> minTravelCost(mainFrame->m_lp->gridRow, std::vector<int>(mainFrame->m_lp->gridCol, INT_MAX));
-    minTravelCost[startingPoint[0]][startingPoint[1]] = 0;
-
     int row = mainFrame->m_lp->gridRow;
     int col = mainFrame->m_lp->gridCol;
-    int targetR = destinationPoint[0];
-    int targetC = destinationPoint[1];
+    int targetR = mainFrame->destinationPoint[0];
+    int targetC = mainFrame->destinationPoint[1];
+    std::array<int, 2> startingPoint = mainFrame->startingPoint;
+    std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
     
     // std::thread ss(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
     // ss.join();
@@ -202,7 +201,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     // auto future = std::async(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
     // auto resultPair = future.get();
 
-    auto [pointExplored, shortestDistance, prev] = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
+    auto [numOfCellsVisited, shortestDistance, prev] = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
     std::array<int, 2> pathTrackCell {prev[targetR][targetC]};
     while(pathTrackCell[0] != -1 && pathTrackCell[1] != -1 )
     {
@@ -219,21 +218,22 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     if (shortestDistance == INT_MAX)
     {
-        wxLogMessage("Number of points explored: %d\nThe destination is unreachable!", pointExplored);
+        wxLogMessage("Number of cells visited: %d\nThe destination is unreachable!", numOfCellsVisited);
         return;
     }
 
-    wxLogMessage("Number of points explored: %d\nMinimum distance %d", pointExplored, shortestDistance);
+    wxLogMessage("Number of cells visited: %d\nMinimum distance %d", numOfCellsVisited, shortestDistance);
 }
 
 /**
  * @brief Reset cells except startingPoint, destinationPoint and walls
  */
-void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
+void RightPanel::OnClearSearch(wxCommandEvent &WXUNUSED(event))
 {
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
-    int startingPoint[2] = {mainFrame->startingPoint[0], mainFrame->startingPoint[1]};
-    int destinationPoint[2] = {mainFrame->destinationPoint[0], mainFrame->destinationPoint[1]};
+    std::array<int, 2> startingPoint = mainFrame->startingPoint;
+    std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
+
     for (int i = 0; i<mainFrame->m_lp->gridRow; i++)
     {
         for (int j = 0; j<mainFrame->m_lp->gridCol; j++)
@@ -252,6 +252,29 @@ void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
             }
         }
     }
+    mainFrame->m_lp->grid->ForceRefresh();
+}
+
+/**
+ * @brief Reset entire grid
+ */
+void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
+{
+    MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
+    for (int i = 0; i<mainFrame->m_lp->gridRow; i++)
+    {
+        for (int j = 0; j<mainFrame->m_lp->gridCol; j++)
+        {
+            mainFrame->m_lp->grid->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
+        }
+    }
+
+    // reset
+    mainFrame->startingPoint = {-1, -1};
+    mainFrame->destinationPoint = {-1, -1};
+    mainFrame->startingPointDefined = false;
+    mainFrame->destinationPointDefined = false;
+
     mainFrame->m_lp->grid->ForceRefresh();
 }
 

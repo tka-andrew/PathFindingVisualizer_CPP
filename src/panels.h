@@ -27,6 +27,7 @@ public:
     void OnSetStartingPoint(wxCommandEvent & event);
     void OnSetDestinationPoint(wxCommandEvent & event);
     void OnStartSimulation(wxCommandEvent & event);
+    void OnClearSearch(wxCommandEvent & event);
     void OnResetGrid(wxCommandEvent & event);
 
     wxButton *m_setWall;
@@ -34,6 +35,7 @@ public:
     wxButton *m_setStartingPoint;
     wxButton *m_setDestinationPoint;
     wxButton *m_startSimulation;
+    wxButton *m_clearSearch;
     wxButton *m_resetGrid;
     wxPanel *m_parent;
 };
@@ -43,6 +45,7 @@ const int ID_UNSET_WALL = 102;
 const int ID_SET_STARTING_POINT = 103;
 const int ID_SET_DESTINATION_POINT = 104;
 const int ID_START_SIMULATION = 105;
-const int ID_RESET_GRID = 106;
+const int ID_CLEAR_SEARCH = 106;
+const int ID_RESET_GRID = 107;
 
 #endif // PANELS_H

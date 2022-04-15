@@ -2,6 +2,7 @@
 
 #include <wx/wx.h>
 
+#include <array>
 #include <vector>
 #include <queue>
 #include <unordered_map>
@@ -9,7 +10,7 @@
 
 typedef std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, std::greater<std::vector<int>>> MinHeap;
 
-std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(int source[2], int target[2], int gridRow, int gridCol, MainFrame *mainFramePtr)
+std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr)
 {
     wxGrid *gridPtr = mainFramePtr->m_lp->grid;
 
@@ -19,7 +20,8 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
     std::vector<std::vector<int>> visited(gridRow, std::vector<int>(gridCol, false));
 
     int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    int pointExplored = 0;
+    int numOfCellsVisited = 0;
+    bool foundTarget = false; // not used as it violates Dijkstra's Algorithm
 
     // BASE CASE
     minTravelCost[source[0]][source[1]] = 0;
@@ -27,7 +29,7 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
     MinHeap minHeap;
     minHeap.push({0, source[0], source[1]}); // {effort, r, c}
 
-    while (!minHeap.empty())
+    while (!minHeap.empty() && !foundTarget)
     {
         auto topEle = minHeap.top();
         int curTravelCost = topEle[0];
@@ -35,18 +37,21 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
         int curC = topEle[2];
         minHeap.pop();
 
-        if (curR == target[0] && curC == target[1])
-        {
-            // paint it back to red
-            gridPtr->SetCellBackgroundColour(curR, curC, wxColour(255, 0, 0)); // red
-            gridPtr->ForceRefresh();
-            break;
-        }
         if (visited[curR][curC])
         {
             continue;
         }
+
         visited[curR][curC] = true;
+        numOfCellsVisited++;
+
+        // target cell being popped from minHeap means its travel cost is minimum now
+        if (curR == target[0] && curC == target[1])
+        {
+            break;
+        }
+
+        gridPtr->SetCellBackgroundColour(curR, curC, wxColour(0, 0, 125)); // dark blue
 
         for (auto move : moves)
         {
@@ -61,7 +66,7 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
             if (visited[newR][newC])
             {
                 continue;
-            }
+            }int
 
             // skip if it is a wall
             if (gridPtr->GetCellBackgroundColour(newR, newC) == wxColor(0, 0, 0))
@@ -69,7 +74,7 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
                 continue;
             }
 
-            pointExplored++;
+            gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
 
             int newTravelCost = curTravelCost + 1;
             if (newTravelCost < minTravelCost[newR][newC])
@@ -78,12 +83,25 @@ std::tuple<int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingl
                 prev[newR][newC] = {curR, curC};
                 minHeap.push({newTravelCost, newR, newC});
 
-                gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
-                gridPtr->ForceRefresh();
+                /*
+                    This is a kind of optimization as the travel cost from
+                    one cell to another cell in a grid is always one.
+                    But if the travel cost is different, we can't do this.
+                */
+                // if (newR == target[0] && newC == target[1])
+                // {
+                //     foundTarget = true;
+                //     break;
+                // }
             }
         }
         // wxMilliSleep(10);
         gridPtr->ForceRefresh();
     }
-    return {pointExplored, minTravelCost[target[0]][target[1]], prev};
+
+    // paint the destination point back to red
+    gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
+    gridPtr->ForceRefresh();
+
+    return {numOfCellsVisited, minTravelCost[target[0]][target[1]], prev};
 }

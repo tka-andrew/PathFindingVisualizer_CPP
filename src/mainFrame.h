@@ -7,6 +7,8 @@
 #include <wx/grid.h>
 #include <wx/panel.h>
 
+#include<array>
+
 class wxGrid;
 
 class MainFrame : public wxFrame
@@ -16,13 +18,12 @@ public:
     LeftPanel *m_lp;
     RightPanel *m_rp;
     wxPanel *m_parent;
-    int startingPoint[2] = {-1, -1};
-    int destinationPoint[2] = {-1, -1};
+    std::array<int, 2> startingPoint = {-1, -1};
+    std::array<int, 2> destinationPoint = {-1, -1};
     bool startingPointDefined = false;
     bool destinationPointDefined = false;
 
 private:
-
     void OnHello(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
     void OnAbout(wxCommandEvent &event);
