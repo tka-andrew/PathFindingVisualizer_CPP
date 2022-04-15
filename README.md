@@ -1,5 +1,6 @@
 # Path Finding Visualizer in CPP
-This is mainly to visualize the path finding algorithm written in CPP. Take note that this project being tested on Ubuntu 20.04 environment only.
+This is mainly to visualize the path finding algorithm written in CPP. 
+Take note that this project being tested on Ubuntu 20.04 environment only.
 
 ## RUNNING ON DOCKER CONTAINER
 
@@ -35,6 +36,12 @@ cmake --build .
 ```
 ./PathFindingVisualizer
 ```
+
+## Dijkstra Algorithm vs A* Search
+![alt text](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra01.png?raw=true)
+![alt text](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar01.png?raw=true)
+![alt text](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra02.png?raw=true)
+![alt text](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar02.png?raw=true)
 
 ## References
 1. [Using CMake with wxWidgets application](https://docs.wxwidgets.org/trunk/overview_cmake.html)
