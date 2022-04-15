@@ -6,8 +6,8 @@
 #include <vector>
 #include <climits>
 #include <math.h>
-#include <thread>
-#include <future>
+// #include <thread> // currently not used
+// #include <future> // currently not used
 
 RightPanel::RightPanel(wxPanel *parent)
     : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(-1, -1), wxBORDER_SUNKEN)
@@ -184,7 +184,7 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
 }
 
 void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
-{
+{    
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
 
     if (!mainFrame->startingPointDefined || !mainFrame->destinationPointDefined)
@@ -198,6 +198,8 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         wxLogMessage("Please select one of the path finding algorithms first.");
         return;
     }
+
+    clearSearch(); // clearSearch before starting simulation
     
     auto algoSelected = this->m_algoSelection->GetStringSelection();
 
@@ -270,6 +272,11 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
  * @brief Reset all cells except startingPoint, destinationPoint and walls
  */
 void RightPanel::OnClearSearch(wxCommandEvent &WXUNUSED(event))
+{
+    clearSearch();
+}
+
+void RightPanel::clearSearch()
 {
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
     std::array<int, 2> startingPoint = mainFrame->startingPoint;

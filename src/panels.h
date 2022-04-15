@@ -29,6 +29,7 @@ public:
     void OnStartSimulation(wxCommandEvent & event);
     void OnClearSearch(wxCommandEvent & event);
     void OnResetGrid(wxCommandEvent & event);
+    void clearSearch();
 
     wxButton *m_setWall;
     wxButton *m_unsetWall;
