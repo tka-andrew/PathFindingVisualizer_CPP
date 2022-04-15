@@ -9,7 +9,6 @@
 #include <thread>
 #include <future>
 
-
 RightPanel::RightPanel(wxPanel *parent)
     : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(-1, -1), wxBORDER_SUNKEN)
 {
@@ -25,9 +24,9 @@ RightPanel::RightPanel(wxPanel *parent)
     m_startSimulation = new wxButton(this, ID_START_SIMULATION, wxT("Start Simulation"),
                                      wxPoint(10, 160));
     m_clearSearch = new wxButton(this, ID_CLEAR_SEARCH, wxT("Clear Search"),
-                                     wxPoint(10, 210));
+                                 wxPoint(10, 210));
     m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
-                                     wxPoint(10, 260));
+                               wxPoint(10, 260));
     Connect(ID_SET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnSetWall));
     Connect(ID_UNSET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -193,17 +192,20 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     int targetC = mainFrame->destinationPoint[1];
     std::array<int, 2> startingPoint = mainFrame->startingPoint;
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
-    
-    // std::thread ss(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
-    // ss.join();
 
+    // TO BE FIGURED OUT HOW TO DO THE ANIMATION
+    // std::thread ss(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
+    // ss.detach();
+
+    // AN EXAMPLE OF GETTING RETURNED VALUE FROM THREAD
     // REFERENCE: https://stackoverflow.com/questions/7686939/c-simple-return-value-from-stdthread
     // auto future = std::async(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
-    // auto resultPair = future.get();
+    // auto result = future.get();
 
-    auto [numOfCellsVisited, shortestDistance, prev] = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
-    std::array<int, 2> pathTrackCell {prev[targetR][targetC]};
-    while(pathTrackCell[0] != -1 && pathTrackCell[1] != -1 )
+    // auto [numOfCellsVisited, frequencyOfCellChecking, shortestDistance, prev] = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
+    auto [numOfCellsVisited, frequencyOfCellChecking, shortestDistance, prev] = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame);
+    std::array<int, 2> pathTrackCell{prev[targetR][targetC]};
+    while (pathTrackCell[0] != -1 && pathTrackCell[1] != -1)
     {
         int row = pathTrackCell[0];
         int col = pathTrackCell[1];
@@ -218,15 +220,15 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     if (shortestDistance == INT_MAX)
     {
-        wxLogMessage("Number of cells visited: %d\nThe destination is unreachable!", numOfCellsVisited);
+        wxLogMessage("Number of cells visited: %d\n/Frequency of cell checking: %d\n/The destination is unreachable!", frequencyOfCellChecking, numOfCellsVisited);
         return;
     }
 
-    wxLogMessage("Number of cells visited: %d\nMinimum distance %d", numOfCellsVisited, shortestDistance);
+    wxLogMessage("Number of cells visited: %d\nFrequency of cell checking: %d\nMinimum distance %d", numOfCellsVisited, frequencyOfCellChecking, shortestDistance);
 }
 
 /**
- * @brief Reset cells except startingPoint, destinationPoint and walls
+ * @brief Reset all cells except startingPoint, destinationPoint and walls
  */
 void RightPanel::OnClearSearch(wxCommandEvent &WXUNUSED(event))
 {
@@ -234,9 +236,9 @@ void RightPanel::OnClearSearch(wxCommandEvent &WXUNUSED(event))
     std::array<int, 2> startingPoint = mainFrame->startingPoint;
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
 
-    for (int i = 0; i<mainFrame->m_lp->gridRow; i++)
+    for (int i = 0; i < mainFrame->m_lp->gridRow; i++)
     {
-        for (int j = 0; j<mainFrame->m_lp->gridCol; j++)
+        for (int j = 0; j < mainFrame->m_lp->gridCol; j++)
         {
             if (i == startingPoint[0] && j == startingPoint[1])
             {
@@ -261,9 +263,9 @@ void RightPanel::OnClearSearch(wxCommandEvent &WXUNUSED(event))
 void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
 {
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
-    for (int i = 0; i<mainFrame->m_lp->gridRow; i++)
+    for (int i = 0; i < mainFrame->m_lp->gridRow; i++)
     {
-        for (int j = 0; j<mainFrame->m_lp->gridCol; j++)
+        for (int j = 0; j < mainFrame->m_lp->gridCol; j++)
         {
             mainFrame->m_lp->grid->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
         }

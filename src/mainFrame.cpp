@@ -30,7 +30,7 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     menuBar->Append(menuHelp, "&Help");
     SetMenuBar(menuBar);
     CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
+    SetStatusText("Path Finding Visualizer - by Tan Kui An Andrew 2022");
 
     
 
