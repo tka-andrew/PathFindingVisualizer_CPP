@@ -217,6 +217,12 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     mainFrame->m_lp->grid->SetCellBackgroundColour(startingPoint[0], startingPoint[1], wxColour(0, 255, 0)); // green
     mainFrame->m_lp->grid->ForceRefresh();
 
+    if (shortestDistance == INT_MAX)
+    {
+        wxLogMessage("Number of points explored: %d\nThe destination is unreachable!", pointExplored);
+        return;
+    }
+
     wxLogMessage("Number of points explored: %d\nMinimum distance %d", pointExplored, shortestDistance);
 }
 
