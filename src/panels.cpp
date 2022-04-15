@@ -220,7 +220,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     // auto result = future.get();
 
     int numOfCellsVisited = 0;
-    int frequencyOfCellChecking = 0;
+    int numOfCellCheckingOccurrence = 0;
     int shortestDistance = 0;
     std::vector<std::vector<std::array<int, 2>>> prev;
 
@@ -228,7 +228,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     {
         auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
         numOfCellsVisited = std::get<0>(pathFindingResult);
-        frequencyOfCellChecking = std::get<1>(pathFindingResult);
+        numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
         shortestDistance = std::get<2>(pathFindingResult);
         prev = std::get<3>(pathFindingResult);
     } 
@@ -236,7 +236,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     {
         auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame);
         numOfCellsVisited = std::get<0>(pathFindingResult);
-        frequencyOfCellChecking = std::get<1>(pathFindingResult);
+        numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
         shortestDistance = std::get<2>(pathFindingResult);
         prev = std::get<3>(pathFindingResult);
     }
@@ -261,11 +261,11 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     if (shortestDistance == INT_MAX)
     {
-        wxLogMessage("Number of cells visited: %d\n/Frequency of cell checking: %d\n/The destination is unreachable!", frequencyOfCellChecking, numOfCellsVisited);
+        wxLogMessage("Number of cells visited: %d\n/Number of cell checking occurrence: %d\n/The destination is unreachable!", numOfCellCheckingOccurrence, numOfCellsVisited);
         return;
     }
 
-    wxLogMessage("Number of cells visited: %d\nFrequency of cell checking: %d\nMinimum distance %d", numOfCellsVisited, frequencyOfCellChecking, shortestDistance);
+    wxLogMessage("Number of cells visited: %d\nNumber of cell checking occurence: %d\nMinimum distance %d", numOfCellsVisited, numOfCellCheckingOccurrence, shortestDistance);
 }
 
 /**

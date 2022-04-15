@@ -21,7 +21,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
 
     int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int numOfCellsVisited = 0;
-    int frequencyOfCellChecking = 0;
+    int numOfCellCheckingOccurrence = 0;
     bool foundTarget = false; // not used as it violates Dijkstra's Algorithm
 
     // BASE CASE
@@ -75,7 +75,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
                 continue;
             }
 
-            frequencyOfCellChecking++;
+            numOfCellCheckingOccurrence++;
             gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
 
             int newTravelCost = curTravelCost + 1;
@@ -105,7 +105,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
     gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
     gridPtr->ForceRefresh();
 
-    return {numOfCellsVisited, frequencyOfCellChecking, minTravelCost[target[0]][target[1]], prev};
+    return {numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost[target[0]][target[1]], prev};
 }
 
 std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSearch(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr)
@@ -120,7 +120,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
 
     int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int numOfCellsVisited = 0;
-    int frequencyOfCellChecking = 0;
+    int numOfCellCheckingOccurrence = 0;
 
     // BASE CASE
     minTravelCost[source[0]][source[1]] = 0;
@@ -174,7 +174,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
                 continue;
             }
 
-            frequencyOfCellChecking++;
+            numOfCellCheckingOccurrence++;
             gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
 
             int newDistanceTravelled = distanceTravelled[curR][curC] + 1;
@@ -200,7 +200,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
     gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
     gridPtr->ForceRefresh();
 
-    return {numOfCellsVisited, frequencyOfCellChecking, minTravelCost[target[0]][target[1]], prev};
+    return {numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost[target[0]][target[1]], prev};
 }
 
 int getManhattanDistance(std::array<int, 2> currentCell, std::array<int, 2> targetCell)
