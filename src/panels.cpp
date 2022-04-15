@@ -27,6 +27,12 @@ RightPanel::RightPanel(wxPanel *parent)
                                  wxPoint(10, 210));
     m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
                                wxPoint(10, 260));
+
+    wxArrayString algoChoices;
+    algoChoices.Add( wxT("Dijkstra") );
+    algoChoices.Add( wxT("A* Search") );
+    m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
+
     Connect(ID_SET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnSetWall));
     Connect(ID_UNSET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -51,6 +57,7 @@ RightPanel::RightPanel(wxPanel *parent)
     sizer->Add(m_startSimulation, 0, wxEXPAND, 0);
     sizer->Add(m_clearSearch, 0, wxEXPAND, 0);
     sizer->Add(m_resetGrid, 0, wxEXPAND, 0);
+    sizer->Add(m_algoSelection, 0, wxEXPAND, 0);
     sizer->SetSizeHints(this);
     this->SetSizer(sizer);
 }
@@ -186,6 +193,14 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         return;
     }
 
+    if (this->m_algoSelection->GetSelection() == wxNOT_FOUND)
+    {
+        wxLogMessage("Please select one of the path finding algorithms first.");
+        return;
+    }
+    
+    auto algoSelected = this->m_algoSelection->GetStringSelection();
+
     int row = mainFrame->m_lp->gridRow;
     int col = mainFrame->m_lp->gridCol;
     int targetR = mainFrame->destinationPoint[0];
@@ -202,8 +217,32 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     // auto future = std::async(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
     // auto result = future.get();
 
-    // auto [numOfCellsVisited, frequencyOfCellChecking, shortestDistance, prev] = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
-    auto [numOfCellsVisited, frequencyOfCellChecking, shortestDistance, prev] = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame);
+    int numOfCellsVisited = 0;
+    int frequencyOfCellChecking = 0;
+    int shortestDistance = 0;
+    std::vector<std::vector<std::array<int, 2>>> prev;
+
+    if (algoSelected == wxString("Dijkstra"))
+    {
+        auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
+        numOfCellsVisited = std::get<0>(pathFindingResult);
+        frequencyOfCellChecking = std::get<1>(pathFindingResult);
+        shortestDistance = std::get<2>(pathFindingResult);
+        prev = std::get<3>(pathFindingResult);
+    } 
+    else if (algoSelected == wxString("A* Search"))
+    {
+        auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame);
+        numOfCellsVisited = std::get<0>(pathFindingResult);
+        frequencyOfCellChecking = std::get<1>(pathFindingResult);
+        shortestDistance = std::get<2>(pathFindingResult);
+        prev = std::get<3>(pathFindingResult);
+    }
+    else {
+        wxLogMessage("Invalid selection.");
+        return;
+    }
+
     std::array<int, 2> pathTrackCell{prev[targetR][targetC]};
     while (pathTrackCell[0] != -1 && pathTrackCell[1] != -1)
     {

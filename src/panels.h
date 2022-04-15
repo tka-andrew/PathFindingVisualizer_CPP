@@ -37,6 +37,7 @@ public:
     wxButton *m_startSimulation;
     wxButton *m_clearSearch;
     wxButton *m_resetGrid;
+    wxComboBox *m_algoSelection;
     wxPanel *m_parent;
 };
 
@@ -47,5 +48,6 @@ const int ID_SET_DESTINATION_POINT = 104;
 const int ID_START_SIMULATION = 105;
 const int ID_CLEAR_SEARCH = 106;
 const int ID_RESET_GRID = 107;
+const int ID_ALGO_SELECTION = 108;
 
 #endif // PANELS_H
