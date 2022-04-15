@@ -200,7 +200,12 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
     gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
     gridPtr->ForceRefresh();
 
-    return {numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost[target[0]][target[1]], prev};
+    /*
+        Take note that minTravelCost[target[0]][target[1]] will have same value as distanceTravelled[target[0]][target[1]].
+        This is because the ManhattanDistance will equal to zero, and hence travelCost will be equal to distanceTravalled.
+        However, we will return distanceTravelled to avoid confusion.
+    */
+    return {numOfCellsVisited, numOfCellCheckingOccurrence, distanceTravelled[target[0]][target[1]], prev};
 }
 
 int getManhattanDistance(std::array<int, 2> currentCell, std::array<int, 2> targetCell)
