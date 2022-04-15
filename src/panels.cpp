@@ -24,6 +24,8 @@ RightPanel::RightPanel(wxPanel *parent)
                                          wxPoint(10, 110));
     m_startSimulation = new wxButton(this, ID_START_SIMULATION, wxT("Start Simulation"),
                                      wxPoint(10, 160));
+    m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
+                                     wxPoint(10, 210));
     Connect(ID_SET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnSetWall));
     Connect(ID_UNSET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -34,6 +36,8 @@ RightPanel::RightPanel(wxPanel *parent)
             wxCommandEventHandler(RightPanel::OnSetDestinationPoint));
     Connect(ID_START_SIMULATION, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnStartSimulation));
+    Connect(ID_RESET_GRID, wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler(RightPanel::OnResetGrid));
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     // Second button takes the full space
@@ -42,6 +46,7 @@ RightPanel::RightPanel(wxPanel *parent)
     sizer->Add(m_setStartingPoint, 0, wxEXPAND, 0);
     sizer->Add(m_setDestinationPoint, 0, wxEXPAND, 0);
     sizer->Add(m_startSimulation, 0, wxEXPAND, 0);
+    sizer->Add(m_resetGrid, 0, wxEXPAND, 0);
     sizer->SetSizeHints(this);
     this->SetSizer(sizer);
 }
@@ -213,6 +218,35 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     mainFrame->m_lp->grid->ForceRefresh();
 
     wxLogMessage("Number of points explored: %d\nMinimum distance %d", pointExplored, shortestDistance);
+}
+
+/**
+ * @brief Reset cells except startingPoint, destinationPoint and walls
+ */
+void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
+{
+    MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
+    int startingPoint[2] = {mainFrame->startingPoint[0], mainFrame->startingPoint[1]};
+    int destinationPoint[2] = {mainFrame->destinationPoint[0], mainFrame->destinationPoint[1]};
+    for (int i = 0; i<mainFrame->m_lp->gridRow; i++)
+    {
+        for (int j = 0; j<mainFrame->m_lp->gridCol; j++)
+        {
+            if (i == startingPoint[0] && j == startingPoint[1])
+            {
+                continue;
+            }
+            if (i == destinationPoint[0] && j == destinationPoint[1])
+            {
+                continue;
+            }
+            if (mainFrame->m_lp->grid->GetCellBackgroundColour(i, j) != wxColor(0, 0, 0))
+            {
+                mainFrame->m_lp->grid->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
+            }
+        }
+    }
+    mainFrame->m_lp->grid->ForceRefresh();
 }
 
 LeftPanel::LeftPanel(wxPanel *parent)
