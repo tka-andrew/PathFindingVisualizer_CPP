@@ -74,7 +74,6 @@ void RightPanel::OnSetWall(wxCommandEvent &WXUNUSED(event))
     wxGridCellCoordsArray bottomRightCells = mainFrame->m_lp->grid->GetSelectionBlockBottomRight();
     for (int i = 0; i < topLeftCells.Count(); i++)
     {
-
         int rowTopLeft = topLeftCells[i].GetRow();
         int colTopLeft = topLeftCells[i].GetCol();
         int rowBottomRight = bottomRightCells[i].GetRow();
@@ -88,6 +87,10 @@ void RightPanel::OnSetWall(wxCommandEvent &WXUNUSED(event))
         }
     }
     mainFrame->m_lp->grid->ClearSelection();
+    mainFrame->m_lp->grid->ClearSelection();
+    // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
+    // To repaint the grid immediately
+    mainFrame->m_lp->grid->ForceRefresh();
 }
 
 void RightPanel::OnUnsetWall(wxCommandEvent &WXUNUSED(event))
@@ -116,6 +119,9 @@ void RightPanel::OnUnsetWall(wxCommandEvent &WXUNUSED(event))
         }
     }
     mainFrame->m_lp->grid->ClearSelection();
+    // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
+    // To repaint the grid immediately
+    mainFrame->m_lp->grid->ForceRefresh();
 }
 
 void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
@@ -133,7 +139,7 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
 
     if (topLeftCells.Count() > 0)
     {
-        // only use the first cell even if multiple cells selected
+        // only use the topLeftCell of first selection even if there are multiple selections
         int row = topLeftCells[0].GetRow();
         int col = topLeftCells[0].GetCol();
 
@@ -165,7 +171,7 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
 
     if (topLeftCells.Count() > 0)
     {
-        // only use the first cell even if multiple cells selected
+        // only use the topLeftCell of first selection even if there are multiple selections
         int row = topLeftCells[0].GetRow();
         int col = topLeftCells[0].GetCol();
 
@@ -205,8 +211,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     int row = mainFrame->m_lp->gridRow;
     int col = mainFrame->m_lp->gridCol;
-    int targetR = mainFrame->destinationPoint[0];
-    int targetC = mainFrame->destinationPoint[1];
+
     std::array<int, 2> startingPoint = mainFrame->startingPoint;
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
 
@@ -245,6 +250,8 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         return;
     }
 
+    int targetR = mainFrame->destinationPoint[0];
+    int targetC = mainFrame->destinationPoint[1];
     std::array<int, 2> pathTrackCell{prev[targetR][targetC]};
     while (pathTrackCell[0] != -1 && pathTrackCell[1] != -1)
     {
@@ -261,7 +268,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     if (shortestDistance == INT_MAX)
     {
-        wxLogMessage("Number of cells visited: %d\n/Number of cell checking occurrence: %d\n/The destination is unreachable!", numOfCellCheckingOccurrence, numOfCellsVisited);
+        wxLogMessage("Number of cells visited: %d\nNumber of cell checking occurrence: %d\nThe destination is unreachable!", numOfCellCheckingOccurrence, numOfCellsVisited);
         return;
     }
 
@@ -350,6 +357,5 @@ LeftPanel::LeftPanel(wxPanel *parent)
 
     wxBoxSizer *hbox = new wxBoxSizer(wxVERTICAL);
     hbox->Add(grid, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
-    // hbox->Add(grid, 1, wxEXPAND | wxALL, 20);
     this->SetSizer(hbox);
 }
