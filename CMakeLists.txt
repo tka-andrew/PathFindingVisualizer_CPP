@@ -6,6 +6,8 @@ project(PathFindingVisualizer VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+enable_testing() # To tell CMake that we are going to have unit tests
+
 # REFERENCE: https://answers.opencv.org/question/194036/how-to-enable-multi-thread-in-cmake-centos/
 # to use multi threading, this liune is needed
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread") 
@@ -26,6 +28,7 @@ file( GLOB cppFILES
 # add the executable
 add_executable(${PROJECT_NAME} ${cppFILES})
 
+# REFERENCE: https://www.youtube.com/watch?v=ED-WUk440qc&list=PLalVdRk2RC6o5GHu618ARWh0VO0bFlif4&index=3
 # DOWNLOAD ALL THE SUBMODULES
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -51,3 +54,5 @@ add_subdirectory(thirdparty/googletest)
 
 # REFERENCE: https://docs.wxwidgets.org/trunk/overview_cmake.html
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+
+add_subdirectory(test)
