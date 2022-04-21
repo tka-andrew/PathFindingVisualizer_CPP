@@ -18,7 +18,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread")
 find_package(wxWidgets REQUIRED COMPONENTS net core base adv)
 include(${wxWidgets_USE_FILE})
 
-file( GLOB cppFILES
+set(Sources
     src/main.cpp
     src/mainFrame.cpp
     src/panels.cpp
@@ -26,7 +26,7 @@ file( GLOB cppFILES
 )
 
 # add the executable
-add_executable(${PROJECT_NAME} ${cppFILES})
+add_executable(${PROJECT_NAME} ${Sources})
 
 # REFERENCE: https://www.youtube.com/watch?v=ED-WUk440qc&list=PLalVdRk2RC6o5GHu618ARWh0VO0bFlif4&index=3
 # DOWNLOAD ALL THE SUBMODULES
