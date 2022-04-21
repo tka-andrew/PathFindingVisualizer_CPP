@@ -1,5 +1,11 @@
 #include "mainFrame.h"
 
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+    EVT_MENU(ID_Hello, MainFrame::OnHello)
+    EVT_MENU(wxID_EXIT, MainFrame::OnExit)
+    EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+wxEND_EVENT_TABLE()
+
 MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
@@ -31,8 +37,6 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     SetMenuBar(menuBar);
     CreateStatusBar();
     SetStatusText("Path Finding Visualizer - by Tan Kui An Andrew 2022");
-
-    
 
 }
 void MainFrame::OnExit(wxCommandEvent &event)
