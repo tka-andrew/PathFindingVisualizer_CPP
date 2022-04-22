@@ -39,6 +39,8 @@ public:
     wxButton *m_clearSearch;
     wxButton *m_resetGrid;
     wxComboBox *m_algoSelection;
+    wxStaticText *m_startingPoint;
+    wxStaticText *m_destinationPoint;
     wxPanel *m_parent;
 };
 

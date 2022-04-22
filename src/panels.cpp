@@ -33,6 +33,11 @@ RightPanel::RightPanel(wxPanel *parent)
     algoChoices.Add( wxT("A* Search") );
     m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
 
+    // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=43787
+    // wxST_NO_AUTORESIZE flag is added to prevent it from auto-sizing
+    m_startingPoint = new wxStaticText(this, wxID_ANY, "Starting Point:\nundefined", wxPoint(10, 400), wxDefaultSize, wxALIGN_CENTER | wxST_NO_AUTORESIZE);
+    m_destinationPoint = new wxStaticText(this, wxID_ANY, "Destination Point:\nundefined", wxPoint(10, 500), wxDefaultSize, wxALIGN_CENTER | wxST_NO_AUTORESIZE);
+
     Connect(ID_SET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler(RightPanel::OnSetWall));
     Connect(ID_UNSET_WALL, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -58,6 +63,8 @@ RightPanel::RightPanel(wxPanel *parent)
     sizer->Add(m_clearSearch, 0, wxEXPAND, 0);
     sizer->Add(m_resetGrid, 0, wxEXPAND, 0);
     sizer->Add(m_algoSelection, 0, wxEXPAND, 0);
+    sizer->Add(m_startingPoint, 0, wxEXPAND | wxALL, 20);
+    sizer->Add(m_destinationPoint, 0, wxEXPAND | wxALL, 20);
     sizer->SetSizeHints(this);
     this->SetSizer(sizer);
 }
@@ -146,13 +153,17 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
         mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(0, 255, 0)); // green
         mainFrame->m_lp->grid->ClearSelection();
 
-        // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
-        // To repaint the grid immediately
-        mainFrame->m_lp->grid->ForceRefresh();
-
         // update memory
         mainFrame->startingPointDefined = true;
         mainFrame->startingPoint = {row, col};
+
+        wxString str;
+        str.Printf(wxT("Starting Point:\n{%d, %d}"), row, col);
+        mainFrame->m_rp->m_startingPoint->SetLabel(str);
+
+        // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
+        // To repaint the grid immediately
+        mainFrame->m_lp->grid->ForceRefresh();
     }
 }
 
@@ -178,14 +189,17 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
         mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(255, 0, 0)); // red
         mainFrame->m_lp->grid->ClearSelection();
 
+        // update memory
+        mainFrame->destinationPointDefined = true;
+        mainFrame->destinationPoint = {row, col};
+
+        wxString str;
+        str.Printf(wxT("Destination Point:\n{%d, %d}"), row, col);
+        mainFrame->m_rp->m_destinationPoint->SetLabel(str);
+
         // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
         // To repaint the grid immediately
         mainFrame->m_lp->grid->ForceRefresh();
-
-        // update memory
-        mainFrame->destinationPointDefined = true;
-        mainFrame->destinationPoint[0] = row;
-        mainFrame->destinationPoint[1] = col;
     }
 }
 
