@@ -9,6 +9,8 @@ set (Sources
 
 set (SourcesToBeTested
     ${CMAKE_SOURCE_DIR}/src/pathFindingAlgorithms.cpp
+    ${CMAKE_SOURCE_DIR}/src/mainFrame.cpp
+    ${CMAKE_SOURCE_DIR}/src/panels.cpp
 )
 
 set (HeaderDirectoryToBeTested
@@ -24,7 +26,8 @@ include(${wxWidgets_USE_FILE})
 add_executable(${This} ${Sources} ${SourcesToBeTested})
 
 target_link_libraries(${This} PUBLIC
-    gtest_main # provided by GoogleTest which pulls in a main program
+    # gtest_main # provided by GoogleTest which pulls in a main program
+    gtest # provided by GoogleTest which pulls in a main program
     ${wxWidgets_LIBRARIES}
 )
 
