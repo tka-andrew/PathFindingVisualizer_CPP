@@ -4,6 +4,8 @@
 #include <gtest/gtest.h>
 #include <wx/wx.h>
 
+#include <climits>
+
 TEST(ManhattanDistanceTest, Test01)
 {
     std::array<int, 2> cell1{1, 2};
@@ -60,7 +62,7 @@ protected:
     TestApp *app;
     virtual void SetUp()
     {
-        char appname[] = "wxUnitTest.exe";
+        char appname[] = "DijkstraTest.exe";
         int argc = 1;
         char *argv[1] = {appname};
         app = new TestApp();
@@ -95,7 +97,7 @@ TEST_F(DijkstraTest, Test01)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(DijkstraTest, Test02)
@@ -116,7 +118,7 @@ TEST_F(DijkstraTest, Test02)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(DijkstraTest, Test03)
@@ -137,7 +139,7 @@ TEST_F(DijkstraTest, Test03)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(DijkstraTest, Test04)
@@ -158,7 +160,76 @@ TEST_F(DijkstraTest, Test04)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(DijkstraTest, ObstacleTest)
+{
+    std::array<int, 2> startingPoint{7, 37};
+    std::array<int, 2> destinationPoint{18, 12};
+    int row = 40;
+    int col = 60;
+    // set obstacles
+    int rowTopLeft = 4;
+    int colTopLeft = 18;
+    int rowBottomRight = 26;
+    int colBottomRight = 32;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 1523;
+    int expected_numOfCellCheckingOccurrence = 2991;
+    int expected_shortestDistance = 44;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+
+TEST_F(DijkstraTest, UnreachableTest)
+{
+    std::array<int, 2> startingPoint{2, 2};
+    std::array<int, 2> destinationPoint{2, 10};
+    int row = 40;
+    int col = 60;
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 4;
+    int rowBottomRight = 39;
+    int colBottomRight = 6;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 160;
+    int expected_numOfCellCheckingOccurrence = 276;
+    int expected_shortestDistance = INT_MAX;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 class AStarTest : public testing::Test
@@ -167,7 +238,7 @@ protected:
     TestApp *app;
     virtual void SetUp()
     {
-        char appname[] = "AStarTest01.exe";
+        char appname[] = "AStarTest.exe";
         int argc = 1;
         char *argv[1] = {appname};
         app = new TestApp();
@@ -201,7 +272,7 @@ TEST_F(AStarTest, Test01)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(AStarTest, Test02)
@@ -218,11 +289,11 @@ TEST_F(AStarTest, Test02)
 
     int expected_numOfCellsVisited = 180;
     int expected_numOfCellCheckingOccurrence = 386;
-    int expected_shortestDistance = 16;
+    int expected_shortestDistance = 26;
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(AStarTest, Test03)
@@ -243,7 +314,7 @@ TEST_F(AStarTest, Test03)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
 TEST_F(AStarTest, Test04)
@@ -264,5 +335,73 @@ TEST_F(AStarTest, Test04)
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(AStarTest, ObstacleTest)
+{
+    std::array<int, 2> startingPoint{14, 13};
+    std::array<int, 2> destinationPoint{8, 37};
+    int row = 40;
+    int col = 60;
+    // set obstacles
+    int rowTopLeft = 6;
+    int colTopLeft = 20;
+    int rowBottomRight = 23;
+    int colBottomRight = 29;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 145;
+    int expected_numOfCellCheckingOccurrence = 307;
+    int expected_shortestDistance = 36;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(AStarTest, UnreachableTest)
+{
+    std::array<int, 2> startingPoint{2, 2};
+    std::array<int, 2> destinationPoint{2, 10};
+    int row = 40;
+    int col = 60;
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 4;
+    int rowBottomRight = 39;
+    int colBottomRight = 6;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 160;
+    int expected_numOfCellCheckingOccurrence = 276;
+    int expected_shortestDistance = INT_MAX;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
