@@ -1,5 +1,4 @@
 #include "pathFindingAlgorithms.h"
-#include "main.h"
 #include "mainFrame.h"
 
 #include <gtest/gtest.h>
@@ -98,10 +97,4 @@ TEST_F(DijkstraTest, Test01)
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }

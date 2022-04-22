@@ -26,8 +26,7 @@ include(${wxWidgets_USE_FILE})
 add_executable(${This} ${Sources} ${SourcesToBeTested})
 
 target_link_libraries(${This} PUBLIC
-    # gtest_main # provided by GoogleTest which pulls in a main program
-    gtest # provided by GoogleTest which pulls in a main program
+    gtest_main # provided by GoogleTest which pulls in a main program
     ${wxWidgets_LIBRARIES}
 )
 
