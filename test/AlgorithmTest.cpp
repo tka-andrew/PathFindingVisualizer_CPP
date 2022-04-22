@@ -54,11 +54,11 @@ public:
     }
 };
 
-struct DijkstraTest : public testing::Test
+class DijkstraTest : public testing::Test
 {
 protected:
     TestApp *app;
-    void SetUp()
+    virtual void SetUp()
     {
         char appname[] = "wxUnitTest.exe";
         int argc = 1;
@@ -68,9 +68,8 @@ protected:
         wxEntryStart(argc, argv);
         app->OnInit();
     }
-    void TearDown()
+    virtual void TearDown()
     {
-        //wxTheApp->OnRun();
         app->OnExit();
         wxEntryCleanup();
     }
@@ -93,6 +92,69 @@ TEST_F(DijkstraTest, Test01)
     int expected_numOfCellsVisited = 11;
     int expected_numOfCellCheckingOccurrence = 20;
     int expected_shortestDistance = 4;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+}
+
+TEST_F(DijkstraTest, Test02)
+{
+    std::array<int, 2> startingPoint{10, 20};
+    std::array<int, 2> destinationPoint{18, 7};
+    int row = 40;
+    int col = 60;
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 777;
+    int expected_numOfCellCheckingOccurrence = 1599;
+    int expected_shortestDistance = 21;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+}
+
+TEST_F(DijkstraTest, Test03)
+{
+    std::array<int, 2> startingPoint{10, 20};
+    std::array<int, 2> destinationPoint{27, 30};
+    int row = 40;
+    int col = 60;
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 1156;
+    int expected_numOfCellCheckingOccurrence = 2345;
+    int expected_shortestDistance = 27;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+}
+
+TEST_F(DijkstraTest, Test04)
+{
+    std::array<int, 2> startingPoint{18, 31};
+    std::array<int, 2> destinationPoint{12, 12};
+    int row = 40;
+    int col = 60;
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 1181;
+    int expected_numOfCellCheckingOccurrence = 2427;
+    int expected_shortestDistance = 25;
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
