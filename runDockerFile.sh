@@ -10,4 +10,4 @@ sudo docker run --rm -e DISPLAY=$DISPLAY -e PULSE_SERVER=$PULSE_SERVER -v $XSOCK
                 -v ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native \
                 -v ~/.config/pulse/cookie:/root/.config/pulse/cookie \
                 -e XAUTHORITY=$XAUTH -t tka-andrew/path-finding-visualizer:latest \
-                bash -c "cmake .. && cmake --build . && ./test/UnitTests && ./PathFindingVisualizer"
+                bash -c "./test/UnitTests && ./PathFindingVisualizer"
