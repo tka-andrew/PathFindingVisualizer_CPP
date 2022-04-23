@@ -1,5 +1,5 @@
 # Path Finding Visualizer in CPP
-This is mainly to visualize the path finding algorithm written in CPP. 
+A desktop application developed to visualize the path finding algorithms written in C++. 
 Take note that this project being tested on Ubuntu 20.04 environment only.
 
 ## RUNNING ON DOCKER CONTAINER
