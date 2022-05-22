@@ -1,9 +1,9 @@
 #include "mainFrame.h"
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(ID_Hello, MainFrame::OnHello)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+    EVT_MENU(ID_USAGEGUIDE, MainFrame::OnUsageGuide)
 wxEND_EVENT_TABLE()
 
 MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
@@ -25,12 +25,12 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     this->Centre();
 
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
-                     "Help string shown in status bar for this menu item");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append(wxID_ABOUT);
+    menuHelp->Append(ID_USAGEGUIDE, "&Usage Guide...\tCtrl-H",
+                     "Usage Guide");
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
@@ -39,10 +39,12 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     SetStatusText("Path Finding Visualizer - by Tan Kui An Andrew 2022");
 
 }
+
 void MainFrame::OnExit(wxCommandEvent &event)
 {
     Close(true);
 }
+
 void MainFrame::OnAbout(wxCommandEvent &event)
 {
     wxMessageBox("The main purpose of this app is to visualize the path finding algorithm written in CPP. \
@@ -50,7 +52,14 @@ void MainFrame::OnAbout(wxCommandEvent &event)
     \nTake note that this project is being tested on Ubuntu 20.04 environment only.",
                  "About this app", wxOK | wxICON_INFORMATION);
 }
-void MainFrame::OnHello(wxCommandEvent &event)
+
+void MainFrame::OnUsageGuide(wxCommandEvent &event)
 {
-    wxLogMessage("Just a dummy Hello World!");
+    wxMessageBox("1. Setting a starting point: highlight a cell and click at the 'Set Starting Point' button \
+    \n2. Setting a destination point: highlight a cell and click at the 'Set Destination Point' button \
+    \n3. Setting obstacles: highlight the area that you want to set as obstacles, then click the 'Set Wall' button  \
+    \n4. Removing obstacles: highlight the obstacles that you want to remove, then click the 'Unset Wall' button \
+    \n5. Selecting algorithm: select either 'Dijkstra' or 'A* Search' from the dropdown \
+    \n6. Starting simulation: click at the 'Start Simulation' button",
+                 "Usage Guide", wxOK | wxICON_INFORMATION);
 }

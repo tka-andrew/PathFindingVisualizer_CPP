@@ -24,14 +24,14 @@ public:
     bool destinationPointDefined = false;
 
 private:
-    void OnHello(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
     void OnAbout(wxCommandEvent &event);
+    void OnUsageGuide(wxCommandEvent &event);
     wxDECLARE_EVENT_TABLE();
 };
 enum
 {
-    ID_Hello = 1
+    ID_USAGEGUIDE = 1
 };
 
 
