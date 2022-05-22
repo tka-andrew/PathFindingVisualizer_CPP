@@ -94,6 +94,8 @@ void RightPanel::OnSetWall(wxCommandEvent &WXUNUSED(event))
         }
     }
     mainFrame->m_lp->grid->ClearSelection();
+    repaintPoints();
+
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
     // To repaint the grid immediately
     mainFrame->m_lp->grid->ForceRefresh();
@@ -125,6 +127,8 @@ void RightPanel::OnUnsetWall(wxCommandEvent &WXUNUSED(event))
         }
     }
     mainFrame->m_lp->grid->ClearSelection();
+    repaintPoints();
+
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
     // To repaint the grid immediately
     mainFrame->m_lp->grid->ForceRefresh();
@@ -160,10 +164,13 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
         str.Printf(wxT("Starting Point:\n{%d, %d}"), row, col);
         mainFrame->m_rp->m_startingPoint->SetLabel(str);
 
+        repaintPoints(); // in case previously starting point and destination point are the same
+
         // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
         // To repaint the grid immediately
         mainFrame->m_lp->grid->ForceRefresh();
     }
+
 }
 
 void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
@@ -196,10 +203,13 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
         str.Printf(wxT("Destination Point:\n{%d, %d}"), row, col);
         mainFrame->m_rp->m_destinationPoint->SetLabel(str);
 
+        repaintPoints(); // in case previously starting point and destination point are the same
+    
         // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
         // To repaint the grid immediately
         mainFrame->m_lp->grid->ForceRefresh();
     }
+
 }
 
 void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
@@ -351,6 +361,25 @@ void RightPanel::resetPoints()
     mainFrame->destinationPointDefined = false;
     m_startingPoint->SetLabel("Starting Point:\nundefined");
     m_destinationPoint->SetLabel("Destination Point:\nundefined");
+}
+
+// repaint starting point and destination point
+void RightPanel::repaintPoints()
+{
+    MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
+    if (mainFrame->startingPointDefined)
+    {
+        int row = mainFrame->startingPoint[0];
+        int col = mainFrame->startingPoint[1];
+        mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(0, 255, 0)); // green
+    }
+
+    if (mainFrame->destinationPointDefined)
+    {
+        int row = mainFrame->destinationPoint[0];
+        int col = mainFrame->destinationPoint[1];
+        mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(255, 0, 0)); // red
+    }
 }
 
 LeftPanel::LeftPanel(wxPanel *parent)
