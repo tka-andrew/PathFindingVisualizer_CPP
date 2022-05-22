@@ -30,6 +30,7 @@ public:
     void OnClearSearch(wxCommandEvent & event);
     void OnResetGrid(wxCommandEvent & event);
     void clearSearch();
+    void resetPoints();
 
     wxButton *m_setWall;
     wxButton *m_unsetWall;

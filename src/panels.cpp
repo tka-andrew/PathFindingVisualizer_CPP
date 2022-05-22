@@ -94,7 +94,6 @@ void RightPanel::OnSetWall(wxCommandEvent &WXUNUSED(event))
         }
     }
     mainFrame->m_lp->grid->ClearSelection();
-    mainFrame->m_lp->grid->ClearSelection();
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
     // To repaint the grid immediately
     mainFrame->m_lp->grid->ForceRefresh();
@@ -338,13 +337,20 @@ void RightPanel::OnResetGrid(wxCommandEvent &WXUNUSED(event))
         }
     }
 
-    // reset
+    resetPoints();
+
+    mainFrame->m_lp->grid->ForceRefresh();
+}
+
+void RightPanel::resetPoints()
+{
+    MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
     mainFrame->startingPoint = {-1, -1};
     mainFrame->destinationPoint = {-1, -1};
     mainFrame->startingPointDefined = false;
     mainFrame->destinationPointDefined = false;
-
-    mainFrame->m_lp->grid->ForceRefresh();
+    m_startingPoint->SetLabel("Starting Point:\nundefined");
+    m_destinationPoint->SetLabel("Destination Point:\nundefined");
 }
 
 LeftPanel::LeftPanel(wxPanel *parent)
