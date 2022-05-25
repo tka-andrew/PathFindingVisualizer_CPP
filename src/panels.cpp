@@ -6,8 +6,6 @@
 #include <vector>
 #include <climits>
 #include <math.h>
-// #include <thread> // currently not used
-// #include <future> // currently not used
 
 RightPanel::RightPanel(wxPanel *parent)
     : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(-1, -1), wxBORDER_SUNKEN)
@@ -238,15 +236,6 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     std::array<int, 2> startingPoint = mainFrame->startingPoint;
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
 
-    // TO BE FIGURED OUT HOW TO DO THE ANIMATION
-    // std::thread ss(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
-    // ss.detach();
-
-    // AN EXAMPLE OF GETTING RETURNED VALUE FROM THREAD
-    // REFERENCE: https://stackoverflow.com/questions/7686939/c-simple-return-value-from-stdthread
-    // auto future = std::async(dijkstraSingleTarget,startingPoint, destinationPoint, row, col, mainFrame);
-    // auto result = future.get();
-
     int numOfCellsVisited = 0;
     int numOfCellCheckingOccurrence = 0;
     int shortestDistance = 0;
@@ -254,7 +243,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
 
     if (algoSelected == wxString("Dijkstra"))
     {
-        auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame);
+        auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame, true);
         numOfCellsVisited = std::get<0>(pathFindingResult);
         numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
         shortestDistance = std::get<2>(pathFindingResult);
@@ -262,7 +251,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     } 
     else if (algoSelected == wxString("A* Search"))
     {
-        auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame);
+        auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
         numOfCellsVisited = std::get<0>(pathFindingResult);
         numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
         shortestDistance = std::get<2>(pathFindingResult);
@@ -283,6 +272,11 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         mainFrame->m_lp->grid->SetCellBackgroundColour(row, col, wxColour(100, 100, 100));
         pathTrackCell[0] = prev[row][col][0];
         pathTrackCell[1] = prev[row][col][1];
+
+        // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
+        mainFrame->Update();
+        mainFrame->Refresh(false);
+
     }
 
     // paint the starting point back to green

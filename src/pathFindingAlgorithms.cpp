@@ -10,7 +10,7 @@
 
 typedef std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, std::greater<std::vector<int>>> MinHeap;
 
-std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr)
+std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstraSingleTarget(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation)
 {
     wxGrid *gridPtr = mainFramePtr->m_lp->grid;
 
@@ -22,7 +22,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
     int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int numOfCellsVisited = 0;
     int numOfCellCheckingOccurrence = 0;
-    bool foundTarget = false; // not used as it violates Dijkstra's Algorithm
+    bool foundTarget = false; // not used as it conflicts with Dijkstra's Algorithm
 
     // BASE CASE
     minTravelCost[source[0]][source[1]] = 0;
@@ -97,18 +97,22 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
                 // }
             }
         }
-        // wxMilliSleep(10);
-        gridPtr->ForceRefresh();
+
+        if (showAnimation)
+        {
+            // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
+            mainFramePtr->Update();
+            mainFramePtr->Refresh(false);
+        }
     }
 
-    // paint the destination point back to red
-    gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
+    mainFramePtr->m_rp->repaintPoints();
     gridPtr->ForceRefresh();
 
     return {numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost[target[0]][target[1]], prev};
 }
 
-std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSearch(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr)
+std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSearch(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation)
 {
     wxGrid *gridPtr = mainFramePtr->m_lp->grid;
 
@@ -192,12 +196,16 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
                 minHeap.push({newTravelCost, newR, newC});
             }
         }
-        // wxMilliSleep(10);
-        gridPtr->ForceRefresh();
+
+        if (showAnimation)
+        {
+            // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
+            mainFramePtr->Update();
+            mainFramePtr->Refresh(false);
+        }
     }
 
-    // paint the destination point back to red
-    gridPtr->SetCellBackgroundColour(target[0], target[1], wxColour(255, 0, 0)); // red
+    mainFramePtr->m_rp->repaintPoints();
     gridPtr->ForceRefresh();
 
     /*
