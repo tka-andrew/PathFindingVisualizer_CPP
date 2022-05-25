@@ -29,6 +29,7 @@ RightPanel::RightPanel(wxPanel *parent)
     wxArrayString algoChoices;
     algoChoices.Add( wxT("Dijkstra") );
     algoChoices.Add( wxT("A* Search") );
+    algoChoices.Add( wxT("Greedy Best First Search") );
     m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
 
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=43787
@@ -236,31 +237,30 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     std::array<int, 2> startingPoint = mainFrame->startingPoint;
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
 
-    int numOfCellsVisited = 0;
-    int numOfCellCheckingOccurrence = 0;
-    int shortestDistance = 0;
-    std::vector<std::vector<std::array<int, 2>>> prev;
+    // return: numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost, prev
+    std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>>  pathFindingResult;
 
     if (algoSelected == wxString("Dijkstra"))
     {
-        auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame, true);
-        numOfCellsVisited = std::get<0>(pathFindingResult);
-        numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
-        shortestDistance = std::get<2>(pathFindingResult);
-        prev = std::get<3>(pathFindingResult);
+        pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame, true);
     } 
     else if (algoSelected == wxString("A* Search"))
     {
-        auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
-        numOfCellsVisited = std::get<0>(pathFindingResult);
-        numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
-        shortestDistance = std::get<2>(pathFindingResult);
-        prev = std::get<3>(pathFindingResult);
+        pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
+    }
+    else if (algoSelected == wxString("Greedy Best First Search"))
+    {
+        pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
     }
     else {
         wxLogMessage("Invalid selection.");
         return;
     }
+
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
 
     int targetR = mainFrame->destinationPoint[0];
     int targetC = mainFrame->destinationPoint[1];
