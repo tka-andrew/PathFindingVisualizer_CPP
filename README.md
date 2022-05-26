@@ -37,7 +37,7 @@ cmake --build .
 ./PathFindingVisualizer
 ```
 
-## Dijkstra Algorithm vs A* Search
+## Dijkstra Algorithm vs A* Search vs Greedy Best First Search
 ### Example 01
 ![Dijkstra01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra01.png?raw=true)
 ![AStar01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar01.png?raw=true)
