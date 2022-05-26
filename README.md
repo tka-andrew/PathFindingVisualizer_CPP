@@ -41,10 +41,12 @@ cmake --build .
 ### Example 01
 ![Dijkstra01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra01.png?raw=true)
 ![AStar01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar01.png?raw=true)
+![GreedyBestFirstSearch01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/GreedyBestFirstSearch01.png?raw=true)
 
 ### Example 02
 ![Dijkstra02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra02.png?raw=true)
 ![AStar02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar02.png?raw=true)
+![GreedyBestFirstSearch02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/GreedyBestFirstSearch02.png?raw=true)
 
 ## References
 1. [Using CMake with wxWidgets application](https://docs.wxwidgets.org/trunk/overview_cmake.html)
