@@ -6,6 +6,10 @@
 
 #include <climits>
 
+// global variables
+static const int gridRow = 40;
+static const int gridCol = 60;
+
 TEST(ManhattanDistanceTest, Test01)
 {
     std::array<int, 2> cell1{1, 2};
@@ -83,9 +87,7 @@ TEST_F(DijkstraTest, Test01)
 {
     std::array<int, 2> startingPoint{0, 0};
     std::array<int, 2> destinationPoint{0, 4};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -104,9 +106,7 @@ TEST_F(DijkstraTest, Test02)
 {
     std::array<int, 2> startingPoint{10, 20};
     std::array<int, 2> destinationPoint{18, 7};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -125,9 +125,7 @@ TEST_F(DijkstraTest, Test03)
 {
     std::array<int, 2> startingPoint{10, 20};
     std::array<int, 2> destinationPoint{27, 30};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -146,9 +144,7 @@ TEST_F(DijkstraTest, Test04)
 {
     std::array<int, 2> startingPoint{18, 31};
     std::array<int, 2> destinationPoint{12, 12};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -167,8 +163,6 @@ TEST_F(DijkstraTest, ObstacleTest)
 {
     std::array<int, 2> startingPoint{7, 37};
     std::array<int, 2> destinationPoint{18, 12};
-    int row = 40;
-    int col = 60;
     // set obstacles
     int rowTopLeft = 4;
     int colTopLeft = 18;
@@ -182,7 +176,7 @@ TEST_F(DijkstraTest, ObstacleTest)
         }
     }
 
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -202,8 +196,6 @@ TEST_F(DijkstraTest, UnreachableTest)
 {
     std::array<int, 2> startingPoint{2, 2};
     std::array<int, 2> destinationPoint{2, 10};
-    int row = 40;
-    int col = 60;
     // set obstacles
     int rowTopLeft = 0;
     int colTopLeft = 4;
@@ -217,7 +209,7 @@ TEST_F(DijkstraTest, UnreachableTest)
         }
     }
 
-    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -258,9 +250,7 @@ TEST_F(AStarTest, Test01)
 {
     std::array<int, 2> startingPoint{12, 10};
     std::array<int, 2> destinationPoint{6, 19};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -279,9 +269,7 @@ TEST_F(AStarTest, Test02)
 {
     std::array<int, 2> startingPoint{8, 13};
     std::array<int, 2> destinationPoint{25, 22};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -300,9 +288,7 @@ TEST_F(AStarTest, Test03)
 {
     std::array<int, 2> startingPoint{13, 37};
     std::array<int, 2> destinationPoint{24, 17};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -321,9 +307,7 @@ TEST_F(AStarTest, Test04)
 {
     std::array<int, 2> startingPoint{30, 43};
     std::array<int, 2> destinationPoint{10, 24};
-    int row = 40;
-    int col = 60;
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -342,8 +326,6 @@ TEST_F(AStarTest, ObstacleTest)
 {
     std::array<int, 2> startingPoint{14, 13};
     std::array<int, 2> destinationPoint{8, 37};
-    int row = 40;
-    int col = 60;
     // set obstacles
     int rowTopLeft = 6;
     int colTopLeft = 20;
@@ -357,7 +339,7 @@ TEST_F(AStarTest, ObstacleTest)
         }
     }
 
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -376,8 +358,6 @@ TEST_F(AStarTest, UnreachableTest)
 {
     std::array<int, 2> startingPoint{2, 2};
     std::array<int, 2> destinationPoint{2, 10};
-    int row = 40;
-    int col = 60;
     // set obstacles
     int rowTopLeft = 0;
     int colTopLeft = 4;
@@ -391,7 +371,7 @@ TEST_F(AStarTest, UnreachableTest)
         }
     }
 
-    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, app->mainFrame);
+    auto pathFindingResult = aStarSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
     int numOfCellsVisited = std::get<0>(pathFindingResult);
     int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
     int shortestDistance = std::get<2>(pathFindingResult);
@@ -400,6 +380,97 @@ TEST_F(AStarTest, UnreachableTest)
     int expected_numOfCellsVisited = 160;
     int expected_numOfCellCheckingOccurrence = 276;
     int expected_shortestDistance = INT_MAX;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+class GreedyBestFirstTest : public testing::Test
+{
+protected:
+    TestApp *app;
+    virtual void SetUp()
+    {
+        char appname[] = "GreedyBestFirstTest.exe";
+        int argc = 1;
+        char *argv[1] = {appname};
+        app = new TestApp();
+        wxApp::SetInstance(app);
+        wxEntryStart(argc, argv);
+        app->OnInit();
+    }
+    virtual void TearDown()
+    {
+        app->OnExit();
+        wxEntryCleanup();
+    }
+};
+
+TEST_F(GreedyBestFirstTest, Test01)
+{
+    std::array<int, 2> startingPoint{13, 12};
+    std::array<int, 2> destinationPoint{5, 30};
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 27;
+    int expected_numOfCellCheckingOccurrence = 79;
+    int expected_shortestDistance = 26;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(GreedyBestFirstTest, Test02)
+{
+    std::array<int, 2> startingPoint{15, 19};
+    std::array<int, 2> destinationPoint{28, 36};
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 31;
+    int expected_numOfCellCheckingOccurrence = 91;
+    int expected_shortestDistance = 30;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(GreedyBestFirstTest, ObstacleTest)
+{
+    std::array<int, 2> startingPoint{14, 13};
+    std::array<int, 2> destinationPoint{8, 37};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 20;
+    int rowBottomRight = 12;
+    int colBottomRight = 29;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 66;
+    int expected_numOfCellCheckingOccurrence = 151;
+    int expected_shortestDistance = 40;
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
