@@ -405,6 +405,8 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bfs(std:
 
     }
 
+    if (!foundTarget) travelCost = INT_MAX; 
+
     mainFramePtr->m_rp->repaintPoints();
     gridPtr->ForceRefresh();
 
