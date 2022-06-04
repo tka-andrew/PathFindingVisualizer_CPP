@@ -320,8 +320,6 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bfs(std:
     wxGrid *gridPtr = mainFramePtr->m_lp->grid;
 
     // VARIABLLE DECLARATION
-    std::vector<std::vector<int>> minTravelCost(gridRow, std::vector<int>(gridCol, INT_MAX));
-    std::vector<std::vector<int>> distanceTravelled(gridRow, std::vector<int>(gridCol, INT_MAX));
     std::vector<std::vector<std::array<int, 2>>> prev(gridRow, std::vector<std::array<int, 2>>(gridCol, {-1, -1}));
     std::vector<std::vector<int>> visited(gridRow, std::vector<int>(gridCol, false));
 
