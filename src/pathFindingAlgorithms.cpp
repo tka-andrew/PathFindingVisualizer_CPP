@@ -315,6 +315,104 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> greedyBe
     return {numOfCellsVisited, numOfCellCheckingOccurrence, distanceTravelled[target[0]][target[1]], prev};
 }
 
+std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bfs(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation)
+{
+    wxGrid *gridPtr = mainFramePtr->m_lp->grid;
+
+    // VARIABLLE DECLARATION
+    std::vector<std::vector<int>> minTravelCost(gridRow, std::vector<int>(gridCol, INT_MAX));
+    std::vector<std::vector<int>> distanceTravelled(gridRow, std::vector<int>(gridCol, INT_MAX));
+    std::vector<std::vector<std::array<int, 2>>> prev(gridRow, std::vector<std::array<int, 2>>(gridCol, {-1, -1}));
+    std::vector<std::vector<int>> visited(gridRow, std::vector<int>(gridCol, false));
+
+    int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int numOfCellsVisited = 0;
+    int numOfCellCheckingOccurrence = 0;
+
+    int travelCost = 0;
+    bool foundTarget = false;
+
+    std::queue<std::pair<int, int>> q;
+    q.push({source[0], source[1]});
+
+
+    while (!q.empty())
+    {
+        int n = q.size();
+
+        for (int i=0; i<n; i++)
+        {
+            auto currentNode = q.front();
+            int curR = currentNode.first;
+            int curC = currentNode.second;
+            q.pop();
+
+            if (visited[curR][curC])
+            {
+                continue;
+            }
+
+            visited[curR][curC] = true;
+            numOfCellsVisited++;
+
+            if (curR == target[0] && curC == target[1])
+            {
+                foundTarget = true;
+                break;
+            }
+
+            gridPtr->SetCellBackgroundColour(curR, curC, wxColour(0, 0, 125)); // dark blue
+
+            for (auto move : moves)
+            {
+                int newR = curR + move[0];
+                int newC = curC + move[1];
+
+                if (newR < 0 || newR >= gridRow || newC < 0 || newC >= gridCol)
+                {
+                    continue;
+                }
+
+                if (visited[newR][newC])
+                {
+                    continue;
+                }
+
+                // skip if it is a wall
+                if (gridPtr->GetCellBackgroundColour(newR, newC) == wxColor(0, 0, 0))
+                {
+                    continue;
+                }
+
+                numOfCellCheckingOccurrence++;
+                gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
+
+                prev[newR][newC] = {curR, curC};
+                q.push({newR, newC});
+            }
+
+            if (showAnimation)
+            {
+                // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
+                mainFramePtr->Update();
+                mainFramePtr->Refresh(false);
+            }
+        }
+
+        // break before adding travelCost
+        // because the cell checking step has already considered the travelCost
+        if (foundTarget) break;
+
+        travelCost++;
+
+    }
+
+    mainFramePtr->m_rp->repaintPoints();
+    gridPtr->ForceRefresh();
+
+    return {numOfCellsVisited, numOfCellCheckingOccurrence, travelCost, prev};
+}
+
 int getManhattanDistance(std::array<int, 2> currentCell, std::array<int, 2> targetCell)
 {
     return abs(targetCell[1] - currentCell[1]) + abs(targetCell[0] - currentCell[0]);

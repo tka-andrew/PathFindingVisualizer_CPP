@@ -30,6 +30,7 @@ RightPanel::RightPanel(wxPanel *parent)
     algoChoices.Add( wxT("Dijkstra") );
     algoChoices.Add( wxT("A* Search") );
     algoChoices.Add( wxT("Greedy Best First Search") );
+    algoChoices.Add( wxT("BFS") );
     m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
 
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=43787
@@ -251,6 +252,10 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     else if (algoSelected == wxString("Greedy Best First Search"))
     {
         pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
+    }
+    else if (algoSelected == wxString("BFS"))
+    {
+        pathFindingResult = bfs(startingPoint, destinationPoint, row, col, mainFrame, true);
     }
     else {
         wxLogMessage("Invalid selection.");
