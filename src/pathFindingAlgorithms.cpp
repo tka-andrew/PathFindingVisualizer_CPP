@@ -421,7 +421,7 @@ struct hashFunction
   size_t operator()(const std::pair<int , 
                     int> &x) const
   {
-    return x.first ^ x.second; // 40 here is the number of row of grid
+    return x.first ^ x.second;
   }
 };
 
