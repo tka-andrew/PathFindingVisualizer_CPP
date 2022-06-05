@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <climits>
 
 typedef std::priority_queue<std::vector<int>, std::vector<std::vector<int>>, std::greater<std::vector<int>>> MinHeap;
@@ -411,6 +412,169 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bfs(std:
     gridPtr->ForceRefresh();
 
     return {numOfCellsVisited, numOfCellCheckingOccurrence, travelCost, prev};
+}
+
+// REFERENCE: https://www.geeksforgeeks.org/unordered-set-of-pairs-in-c-with-examples/
+// Hash function 
+struct hashFunction
+{
+  size_t operator()(const std::pair<int , 
+                    int> &x) const
+  {
+    return x.first ^ x.second; // 40 here is the number of row of grid
+  }
+};
+
+std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bidirectionalBFS(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation)
+{
+    wxGrid *gridPtr = mainFramePtr->m_lp->grid;
+
+    // VARIABLLE DECLARATION
+    std::vector<std::vector<std::array<int, 2>>> prev_s(gridRow, std::vector<std::array<int, 2>>(gridCol, {-1, -1}));
+    std::vector<std::vector<std::array<int, 2>>> prev_t(gridRow, std::vector<std::array<int, 2>>(gridCol, {-1, -1}));
+    std::vector<std::vector<int>> visited(gridRow, std::vector<int>(gridCol, false));
+
+    int moves[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int numOfCellsVisited = 0;
+    int numOfCellCheckingOccurrence = 0;
+
+    int travelCost = 0;
+    bool foundTarget = false;
+
+    // use set insead of queue, for faster identifying existence of an element
+    std::unordered_set<std::pair<int, int>, hashFunction> s1;
+    std::unordered_set<std::pair<int, int>, hashFunction> s2;
+    s1.insert({source[0], source[1]});
+    s2.insert({target[0], target[1]});
+
+    std::pair<int, int> intersectionPoint;
+
+    bool isProcessingSourceEnd = true;
+
+    while (!s1.empty() && !s2.empty())
+    {
+        // Minor Enhancement
+        // swap s1 and s2 when s1 has larger size
+        // so that BFS is perform on set with smaller size first
+        // as smaller size of set will result in smaller expansion
+        if (s1.size() > s2.size()) {
+            std::unordered_set<std::pair<int, int>, hashFunction> tempForSwap = s1;
+            s1=s2;
+            s2=tempForSwap;
+            isProcessingSourceEnd = !isProcessingSourceEnd;
+        }
+        
+
+        int n = s1.size();
+        std::unordered_set<std::pair<int, int>, hashFunction> temp;
+        
+        for (const auto& blueCell:s1)
+        {
+            auto currentNode = blueCell;
+            int curR = currentNode.first;
+            int curC = currentNode.second;
+
+            if (visited[curR][curC])
+            {
+                continue;
+            }
+
+            visited[curR][curC] = true;
+            numOfCellsVisited++;
+
+            gridPtr->SetCellBackgroundColour(curR, curC, wxColour(0, 0, 125)); // dark blue
+
+            if (s2.find(blueCell) != s2.end()) { // means both end already met
+                intersectionPoint = blueCell;
+                foundTarget = true;
+                break;
+            }
+
+            for (auto move : moves)
+            {
+                int newR = curR + move[0];
+                int newC = curC + move[1];
+
+                if (newR < 0 || newR >= gridRow || newC < 0 || newC >= gridCol)
+                {
+                    continue;
+                }
+
+                if (visited[newR][newC])
+                {
+                    continue;
+                }
+
+                // skip if it is a wall
+                if (gridPtr->GetCellBackgroundColour(newR, newC) == wxColor(0, 0, 0))
+                {
+                    continue;
+                }
+
+                numOfCellCheckingOccurrence++;
+                gridPtr->SetCellBackgroundColour(newR, newC, wxColour(0, 0, 255)); // blue
+
+                if (isProcessingSourceEnd)
+                    prev_s[newR][newC] = {curR, curC};
+                else
+                    prev_t[newR][newC] = {curR, curC};
+                temp.insert({newR, newC});
+            }
+
+            if (showAnimation)
+            {
+                // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
+                mainFramePtr->Update();
+                mainFramePtr->Refresh(false);
+            }
+        }
+
+        // break before adding travelCost
+        // because the cell checking step has already considered the travelCost
+        if (foundTarget) 
+        {
+            // /* PREV_S
+            //                            intersection                target
+            //   source                       point
+            //     @   <-   @   <-    @   <-    @       @       @       @ 
+            //                                  q       r              
+            // */
+            // /* PREV_T
+            //                            intersection                target
+            //   source                       point
+            //     @        @         @         @  ->   @  ->   @   ->  @
+            //                                  q       r              
+            // */
+            int qRow = intersectionPoint.first;
+            int qCol = intersectionPoint.second;
+            int rRow = prev_t[qRow][qCol][0];
+            int rCol = prev_t[qRow][qCol][1];
+            while (rRow != -1 && rCol != -1)
+            {
+                prev_s[rRow][rCol] = {qRow, qCol};
+                qRow = rRow;
+                qCol = rCol;
+                int tempRRow = rRow;
+                int tempRCol = rCol;
+                rRow = prev_t[tempRRow][tempRCol][0];
+                rCol = prev_t[tempRRow][tempRCol][1];
+            }
+            break;
+        }
+
+        // switch s1 and s2 to take turn perform BFS from both ends
+        s1=s2;
+        s2=temp;
+        travelCost++;
+        isProcessingSourceEnd = !isProcessingSourceEnd;
+    }
+
+    if (!foundTarget) travelCost = INT_MAX;
+
+    mainFramePtr->m_rp->repaintPoints();
+    gridPtr->ForceRefresh();
+
+    return {numOfCellsVisited, numOfCellCheckingOccurrence, travelCost, prev_s};
 }
 
 int getManhattanDistance(std::array<int, 2> currentCell, std::array<int, 2> targetCell)

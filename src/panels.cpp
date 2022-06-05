@@ -31,6 +31,7 @@ RightPanel::RightPanel(wxPanel *parent)
     algoChoices.Add( wxT("A* Search") );
     algoChoices.Add( wxT("Greedy Best First Search") );
     algoChoices.Add( wxT("BFS") );
+    algoChoices.Add( wxT("Bidirectional BFS") );
     m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
 
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=43787
@@ -257,6 +258,10 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     {
         pathFindingResult = bfs(startingPoint, destinationPoint, row, col, mainFrame, true);
     }
+    else if (algoSelected == wxString("Bidirectional BFS"))
+    {
+        pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, row, col, mainFrame, true);
+    }
     else {
         wxLogMessage("Invalid selection.");
         return;
@@ -270,7 +275,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     int targetR = mainFrame->destinationPoint[0];
     int targetC = mainFrame->destinationPoint[1];
     std::array<int, 2> pathTrackCell{prev[targetR][targetC]};
-    while (pathTrackCell[0] != -1 && pathTrackCell[1] != -1)
+    while (pathTrackCell[0] != -1 || pathTrackCell[1] != -1)
     {
         int row = pathTrackCell[0];
         int col = pathTrackCell[1];
