@@ -139,17 +139,17 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
 {
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
 
-    if (mainFrame->startingPointDefined)
-    {
-        int previousRow = mainFrame->startingPoint[0];
-        int previousCol = mainFrame->startingPoint[1];
-        mainFrame->m_lp->grid->SetCellBackgroundColour(previousRow, previousCol, wxColour(255, 255, 255)); // white
-    }
-
     wxGridCellCoordsArray topLeftCells = mainFrame->m_lp->grid->GetSelectionBlockTopLeft();
 
     if (topLeftCells.Count() > 0)
     {
+        if (mainFrame->startingPointDefined)
+        {
+            int previousRow = mainFrame->startingPoint[0];
+            int previousCol = mainFrame->startingPoint[1];
+            mainFrame->m_lp->grid->SetCellBackgroundColour(previousRow, previousCol, wxColour(255, 255, 255)); // white
+        }
+
         // only use the topLeftCell of first selection even if there are multiple selections
         int row = topLeftCells[0].GetRow();
         int col = topLeftCells[0].GetCol();
@@ -178,17 +178,17 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
 {
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
 
-    if (mainFrame->destinationPointDefined)
-    {
-        int previousRow = mainFrame->destinationPoint[0];
-        int previousCol = mainFrame->destinationPoint[1];
-        mainFrame->m_lp->grid->SetCellBackgroundColour(previousRow, previousCol, wxColour(255, 255, 255)); // white
-    }
-
     wxGridCellCoordsArray topLeftCells = mainFrame->m_lp->grid->GetSelectionBlockTopLeft();
 
     if (topLeftCells.Count() > 0)
     {
+        if (mainFrame->destinationPointDefined)
+        {
+            int previousRow = mainFrame->destinationPoint[0];
+            int previousCol = mainFrame->destinationPoint[1];
+            mainFrame->m_lp->grid->SetCellBackgroundColour(previousRow, previousCol, wxColour(255, 255, 255)); // white
+        }
+
         // only use the topLeftCell of first selection even if there are multiple selections
         int row = topLeftCells[0].GetRow();
         int col = topLeftCells[0].GetCol();
