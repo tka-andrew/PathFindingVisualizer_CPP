@@ -54,6 +54,10 @@ cmake --build .
 ![BFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS01.png?raw=true)
 ![BFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS02.png?raw=true)
 
+### Bidirectional BFS
+![biBFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS01.png?raw=true)
+![biBFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS02.png?raw=true)
+
 ## References
 1. [Using CMake with wxWidgets application](https://docs.wxwidgets.org/trunk/overview_cmake.html)
 2. [wxWidgets tutorials](https://www.wxwidgets.org/docs/tutorials/)
