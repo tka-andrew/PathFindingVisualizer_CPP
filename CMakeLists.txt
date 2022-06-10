@@ -23,6 +23,7 @@ set(Sources
     src/mainFrame.cpp
     src/panels.cpp
     src/pathFindingAlgorithms.cpp
+    src/heuristicFunctions.cpp
 )
 
 # add the executable

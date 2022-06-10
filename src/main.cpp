@@ -1,7 +1,6 @@
 #include "main.h"
 #include "mainFrame.h"
 
-
 wxIMPLEMENT_APP(PathFindingVisualizerApp);
 
 bool PathFindingVisualizerApp::OnInit()

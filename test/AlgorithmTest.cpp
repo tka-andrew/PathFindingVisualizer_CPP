@@ -10,42 +10,6 @@
 static const int gridRow = 40;
 static const int gridCol = 60;
 
-TEST(ManhattanDistanceTest, Test01)
-{
-    std::array<int, 2> cell1{1, 2};
-    std::array<int, 2> cell2{9, 3};
-    int expected = 9;
-    int result = getManhattanDistance(cell1, cell2);
-    ASSERT_EQ(expected, result);
-}
-
-TEST(ManhattanDistanceTest, Test02)
-{
-    std::array<int, 2> cell1{2, 3};
-    std::array<int, 2> cell2{5, 11};
-    int expected = 11;
-    int result = getManhattanDistance(cell1, cell2);
-    ASSERT_EQ(expected, result);
-}
-
-TEST(ManhattanDistanceTest, Test03)
-{
-    std::array<int, 2> cell1{22, 8};
-    std::array<int, 2> cell2{9, 3};
-    int expected = 18;
-    int result = getManhattanDistance(cell1, cell2);
-    ASSERT_EQ(expected, result);
-}
-
-TEST(ManhattanDistanceTest, Test04)
-{
-    std::array<int, 2> cell1{20, 2};
-    std::array<int, 2> cell2{10, 6};
-    int expected = 14;
-    int result = getManhattanDistance(cell1, cell2);
-    ASSERT_EQ(expected, result);
-}
-
 // REFERENCE: https://www.remy.org.uk/tech.php?tech=1407951209
 class TestApp : public wxApp
 {
@@ -471,6 +435,227 @@ TEST_F(GreedyBestFirstTest, ObstacleTest)
     int expected_numOfCellsVisited = 66;
     int expected_numOfCellCheckingOccurrence = 151;
     int expected_shortestDistance = 40;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(GreedyBestFirstTest, UnreachableTest)
+{
+    std::array<int, 2> startingPoint{2, 2};
+    std::array<int, 2> destinationPoint{2, 10};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 4;
+    int rowBottomRight = 39;
+    int colBottomRight = 6;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 160;
+    int expected_numOfCellCheckingOccurrence = 276;
+    int expected_shortestDistance = INT_MAX;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+class BFSTest : public testing::Test
+{
+protected:
+    TestApp *app;
+    virtual void SetUp()
+    {
+        char appname[] = "BFSTest.exe";
+        int argc = 1;
+        char *argv[1] = {appname};
+        app = new TestApp();
+        wxApp::SetInstance(app);
+        wxEntryStart(argc, argv);
+        app->OnInit();
+    }
+    virtual void TearDown()
+    {
+        app->OnExit();
+        wxEntryCleanup();
+    }
+};
+
+TEST_F(BFSTest, Test02)
+{
+    std::array<int, 2> startingPoint{12, 19};
+    std::array<int, 2> destinationPoint{20, 24};
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 348;
+    int expected_numOfCellCheckingOccurrence = 742;
+    int expected_shortestDistance = 13;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BFSTest, ObstacleTest)
+{
+    std::array<int, 2> startingPoint{14, 13};
+    std::array<int, 2> destinationPoint{8, 37};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 20;
+    int rowBottomRight = 12;
+    int colBottomRight = 29;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 1124;
+    int expected_numOfCellCheckingOccurrence = 2246;
+    int expected_shortestDistance = 30;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BFSTest, UnreachableTest)
+{
+    std::array<int, 2> startingPoint{2, 2};
+    std::array<int, 2> destinationPoint{2, 10};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 4;
+    int rowBottomRight = 39;
+    int colBottomRight = 6;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 160;
+    int expected_numOfCellCheckingOccurrence = 276;
+    int expected_shortestDistance = INT_MAX;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+class BiBFSTest : public testing::Test
+{
+protected:
+    TestApp *app;
+    virtual void SetUp()
+    {
+        char appname[] = "BiBFSTest.exe";
+        int argc = 1;
+        char *argv[1] = {appname};
+        app = new TestApp();
+        wxApp::SetInstance(app);
+        wxEntryStart(argc, argv);
+        app->OnInit();
+    }
+    virtual void TearDown()
+    {
+        app->OnExit();
+        wxEntryCleanup();
+    }
+};
+
+TEST_F(BiBFSTest, ObstacleTest)
+{
+    std::array<int, 2> startingPoint{14, 13};
+    std::array<int, 2> destinationPoint{8, 37};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 20;
+    int rowBottomRight = 12;
+    int colBottomRight = 29;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 733;
+    int expected_numOfCellCheckingOccurrence = 1524;
+    int expected_shortestDistance = 30;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BiBFSTest, UnreachableTest)
+{
+    std::array<int, 2> startingPoint{2, 2};
+    std::array<int, 2> destinationPoint{2, 10};
+    // set obstacles
+    int rowTopLeft = 0;
+    int colTopLeft = 4;
+    int rowBottomRight = 39;
+    int colBottomRight = 6;
+    for (int j = rowTopLeft; j <= rowBottomRight; j++)
+    {
+        for (int k = colTopLeft; k <= colBottomRight; k++)
+        {
+            app->mainFrame->m_lp->grid->SetCellBackgroundColour(j, k, wxColour(0, 0, 0)); // black
+        }
+    }
+
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 165;
+    int expected_numOfCellCheckingOccurrence = 292;
+    int expected_shortestDistance = INT_MAX;
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);

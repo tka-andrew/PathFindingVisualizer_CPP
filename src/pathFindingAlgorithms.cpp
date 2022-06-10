@@ -1,4 +1,5 @@
 #include "pathFindingAlgorithms.h"
+#include "heuristicFunctions.h"
 
 #include <wx/wx.h>
 
@@ -132,7 +133,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSea
     distanceTravelled[source[0]][source[1]] = 0;
 
     MinHeap minHeap;
-    minHeap.push({0+getManhattanDistance(source, target), source[0], source[1]}); // {travelCost, r, c}
+    minHeap.push({getManhattanDistance(source, target), source[0], source[1]}); // {travelCost, r, c}
 
     while (!minHeap.empty())
     {
@@ -575,9 +576,4 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> bidirect
     gridPtr->ForceRefresh();
 
     return {numOfCellsVisited, numOfCellCheckingOccurrence, travelCost, prev_s};
-}
-
-int getManhattanDistance(std::array<int, 2> currentCell, std::array<int, 2> targetCell)
-{
-    return abs(targetCell[1] - currentCell[1]) + abs(targetCell[0] - currentCell[0]);
 }

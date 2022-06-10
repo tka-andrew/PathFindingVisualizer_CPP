@@ -7,7 +7,7 @@
 #include <wx/grid.h>
 #include <wx/panel.h>
 
-#include<array>
+#include <array>
 
 class wxGrid;
 

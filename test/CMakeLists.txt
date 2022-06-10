@@ -5,10 +5,12 @@ set(This UnitTests)
 
 set (Sources
     AlgorithmTest.cpp
+    HeuristicFunctionTest.cpp
 )
 
 set (SourcesToBeTested
     ${CMAKE_SOURCE_DIR}/src/pathFindingAlgorithms.cpp
+    ${CMAKE_SOURCE_DIR}/src/heuristicFunctions.cpp
     ${CMAKE_SOURCE_DIR}/src/mainFrame.cpp
     ${CMAKE_SOURCE_DIR}/src/panels.cpp
 )
