@@ -38,25 +38,36 @@ cmake --build .
 ```
 
 ## Screenshots
+### BFS
+- Not so efficient
+- Can find path with minimum travel cost
+![BFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS01.png?raw=true)
+![BFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS02.png?raw=true)
+
 ### Dijkstra
+- For this case, quite similar to BFS since the travel cost across each node is the same
+- Can find path with minimum travel cost
 ![Dijkstra01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra01.png?raw=true)
 ![Dijkstra02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/Dijkstra02.png?raw=true)
 
+### Bidirectional BFS
+- Explore less nodes than BFS
+- Can find path with minimum travel cost
+- Can identify unreachable nodes quickly
+![biBFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS01.png?raw=true)
+![biBFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS02.png?raw=true)
+
 ### A* Search
+- Explore less nodes as long as heurestic function is appropriate
+- Can find path with minimum travel cost
 ![AStar01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar01.png?raw=true)
 ![AStar02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/AStar02.png?raw=true)
 
 ### Greedy Best First Search
+- Doesn't guarantee minimum travel cost
+- Spend less time in exploring path
 ![GreedyBestFirstSearch01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/GreedyBestFirstSearch01.png?raw=true)
 ![GreedyBestFirstSearch02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/GreedyBestFirstSearch02.png?raw=true)
-
-### BFS
-![BFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS01.png?raw=true)
-![BFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/BFS02.png?raw=true)
-
-### Bidirectional BFS
-![biBFS01](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS01.png?raw=true)
-![biBFS02](https://github.com/tka-andrew/PathFindingVisualizer_CPP/blob/master/images/biBFS02.png?raw=true)
 
 ## References
 1. [Using CMake with wxWidgets application](https://docs.wxwidgets.org/trunk/overview_cmake.html)
