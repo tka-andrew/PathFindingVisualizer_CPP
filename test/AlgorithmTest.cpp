@@ -409,6 +409,44 @@ TEST_F(GreedyBestFirstTest, Test02)
     EXPECT_EQ(shortestDistance, expected_shortestDistance);
 }
 
+TEST_F(GreedyBestFirstTest, Test03)
+{
+    std::array<int, 2> startingPoint{14, 27};
+    std::array<int, 2> destinationPoint{18, 21};
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 11;
+    int expected_numOfCellCheckingOccurrence = 31;
+    int expected_shortestDistance = 10;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(GreedyBestFirstTest, Test04)
+{
+    std::array<int, 2> startingPoint{14, 27};
+    std::array<int, 2> destinationPoint{8, 21};
+    auto pathFindingResult = greedyBestFirstSearch(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 13;
+    int expected_numOfCellCheckingOccurrence = 37;
+    int expected_shortestDistance = 12;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
 TEST_F(GreedyBestFirstTest, ObstacleTest)
 {
     std::array<int, 2> startingPoint{14, 13};
@@ -494,6 +532,25 @@ protected:
     }
 };
 
+TEST_F(BFSTest, Test01)
+{
+    std::array<int, 2> startingPoint{12, 22};
+    std::array<int, 2> destinationPoint{8, 28};
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 194;
+    int expected_numOfCellCheckingOccurrence = 425;
+    int expected_shortestDistance = 10;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
 TEST_F(BFSTest, Test02)
 {
     std::array<int, 2> startingPoint{12, 19};
@@ -507,6 +564,44 @@ TEST_F(BFSTest, Test02)
     int expected_numOfCellsVisited = 348;
     int expected_numOfCellCheckingOccurrence = 742;
     int expected_shortestDistance = 13;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BFSTest, Test03)
+{
+    std::array<int, 2> startingPoint{13, 27};
+    std::array<int, 2> destinationPoint{18, 21};
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 254;
+    int expected_numOfCellCheckingOccurrence = 550;
+    int expected_shortestDistance = 11;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BFSTest, Test04)
+{
+    std::array<int, 2> startingPoint{14, 27};
+    std::array<int, 2> destinationPoint{8, 22};
+    auto pathFindingResult = bfs(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 231;
+    int expected_numOfCellCheckingOccurrence = 503;
+    int expected_shortestDistance = 11;
     
     EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
     EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
@@ -597,6 +692,82 @@ protected:
         wxEntryCleanup();
     }
 };
+
+TEST_F(BiBFSTest, Test01)
+{
+    std::array<int, 2> startingPoint{12, 22};
+    std::array<int, 2> destinationPoint{8, 28};
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 85;
+    int expected_numOfCellCheckingOccurrence = 205;
+    int expected_shortestDistance = 10;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BiBFSTest, Test02)
+{
+    std::array<int, 2> startingPoint{12, 22};
+    std::array<int, 2> destinationPoint{20, 27};
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 153;
+    int expected_numOfCellCheckingOccurrence = 352;
+    int expected_shortestDistance = 13;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BiBFSTest, Test03)
+{
+    std::array<int, 2> startingPoint{14, 27};
+    std::array<int, 2> destinationPoint{18, 21};
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 83;
+    int expected_numOfCellCheckingOccurrence = 200;
+    int expected_shortestDistance = 10;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
+
+TEST_F(BiBFSTest, Test04)
+{
+    std::array<int, 2> startingPoint{14, 27};
+    std::array<int, 2> destinationPoint{8, 22};
+    auto pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, gridRow, gridCol, app->mainFrame);
+    int numOfCellsVisited = std::get<0>(pathFindingResult);
+    int numOfCellCheckingOccurrence = std::get<1>(pathFindingResult);
+    int shortestDistance = std::get<2>(pathFindingResult);
+    std::vector<std::vector<std::array<int, 2>>> prev = std::get<3>(pathFindingResult);
+
+    int expected_numOfCellsVisited = 105;
+    int expected_numOfCellCheckingOccurrence = 248;
+    int expected_shortestDistance = 11;
+    
+    EXPECT_EQ(numOfCellsVisited, expected_numOfCellsVisited);
+    EXPECT_EQ(numOfCellCheckingOccurrence, expected_numOfCellCheckingOccurrence);
+    EXPECT_EQ(shortestDistance, expected_shortestDistance);
+}
 
 TEST_F(BiBFSTest, ObstacleTest)
 {
