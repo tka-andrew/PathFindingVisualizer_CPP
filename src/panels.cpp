@@ -11,27 +11,20 @@ RightPanel::RightPanel(wxPanel *parent)
     : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(-1, -1), wxBORDER_SUNKEN)
 {
     m_parent = parent;
-    m_setWall = new wxButton(this, ID_SET_WALL, wxT("Set Wall"),
-                             wxPoint(10, 10));
-    m_unsetWall = new wxButton(this, ID_UNSET_WALL, wxT("Unset Wall"),
-                               wxPoint(10, 10));
-    m_setStartingPoint = new wxButton(this, ID_SET_STARTING_POINT, wxT("Set Starting Point"),
-                                      wxPoint(10, 60));
-    m_setDestinationPoint = new wxButton(this, ID_SET_DESTINATION_POINT, wxT("Set Destination Point"),
-                                         wxPoint(10, 110));
-    m_startSimulation = new wxButton(this, ID_START_SIMULATION, wxT("Start Simulation"),
-                                     wxPoint(10, 160));
-    m_clearSearch = new wxButton(this, ID_CLEAR_SEARCH, wxT("Clear Search"),
-                                 wxPoint(10, 210));
-    m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"),
-                               wxPoint(10, 260));
+    m_setWall = new wxButton(this, ID_SET_WALL, wxT("Set Wall"));
+    m_unsetWall = new wxButton(this, ID_UNSET_WALL, wxT("Unset Wall"));
+    m_setStartingPoint = new wxButton(this, ID_SET_STARTING_POINT, wxT("Set Starting Point"));
+    m_setDestinationPoint = new wxButton(this, ID_SET_DESTINATION_POINT, wxT("Set Destination Point"));
+    m_startSimulation = new wxButton(this, ID_START_SIMULATION, wxT("Start Simulation"));
+    m_clearSearch = new wxButton(this, ID_CLEAR_SEARCH, wxT("Clear Search"));
+    m_resetGrid = new wxButton(this, ID_RESET_GRID, wxT("Reset Grid"));
 
     wxArrayString algoChoices;
-    algoChoices.Add( wxT("Dijkstra") );
-    algoChoices.Add( wxT("A* Search") );
-    algoChoices.Add( wxT("Greedy Best First Search") );
-    algoChoices.Add( wxT("BFS") );
-    algoChoices.Add( wxT("Bidirectional BFS") );
+    algoChoices.Add(wxT("Dijkstra"));
+    algoChoices.Add(wxT("A* Search"));
+    algoChoices.Add(wxT("Greedy Best First Search"));
+    algoChoices.Add(wxT("BFS"));
+    algoChoices.Add(wxT("Bidirectional BFS"));
     m_algoSelection = new wxComboBox(this, ID_ALGO_SELECTION, "", wxDefaultPosition, wxSize(100, -1), algoChoices);
 
     // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=43787
@@ -171,7 +164,6 @@ void RightPanel::OnSetStartingPoint(wxCommandEvent &WXUNUSED(event))
         // To repaint the grid immediately
         mainFrame->m_lp->grid->ForceRefresh();
     }
-
 }
 
 void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
@@ -205,16 +197,15 @@ void RightPanel::OnSetDestinationPoint(wxCommandEvent &WXUNUSED(event))
         mainFrame->m_rp->m_destinationPoint->SetLabel(str);
 
         repaintPoints(); // in case previously starting point and destination point are the same
-    
+
         // REFERENCE: https://forums.wxwidgets.org/viewtopic.php?t=29984
         // To repaint the grid immediately
         mainFrame->m_lp->grid->ForceRefresh();
     }
-
 }
 
 void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
-{    
+{
     MainFrame *mainFrame = (MainFrame *)m_parent->GetParent();
 
     if (!mainFrame->startingPointDefined || !mainFrame->destinationPointDefined)
@@ -230,7 +221,7 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     }
 
     clearSearch(); // clearSearch before starting simulation
-    
+
     auto algoSelected = this->m_algoSelection->GetStringSelection();
 
     int row = mainFrame->m_lp->gridRow;
@@ -240,12 +231,12 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     std::array<int, 2> destinationPoint = mainFrame->destinationPoint;
 
     // return: numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost, prev
-    std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>>  pathFindingResult;
+    std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> pathFindingResult;
 
     if (algoSelected == wxString("Dijkstra"))
     {
         pathFindingResult = dijkstraSingleTarget(startingPoint, destinationPoint, row, col, mainFrame, true);
-    } 
+    }
     else if (algoSelected == wxString("A* Search"))
     {
         pathFindingResult = aStarSearch(startingPoint, destinationPoint, row, col, mainFrame, true);
@@ -262,7 +253,8 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
     {
         pathFindingResult = bidirectionalBFS(startingPoint, destinationPoint, row, col, mainFrame, true);
     }
-    else {
+    else
+    {
         wxLogMessage("Invalid selection.");
         return;
     }
@@ -286,7 +278,6 @@ void RightPanel::OnStartSimulation(wxCommandEvent &WXUNUSED(event))
         // INSPIRED BY: https://github.com/ArturMarekNowak/Pathfinding-Visualization/blob/master/SourceFiles/cMain.cpp
         mainFrame->Update();
         mainFrame->Refresh(false);
-
     }
 
     // paint the starting point back to green
