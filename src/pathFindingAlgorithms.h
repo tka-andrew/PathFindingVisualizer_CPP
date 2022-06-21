@@ -15,7 +15,7 @@ std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> dijkstra
 // return: numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost, prev
 std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> aStarSearch(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation=false);
 
-// return: numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost, prev
+// return: numOfCellsVisited, numOfCellCheckingOccurrence, travelCost, prev
 std::tuple<int, int, int, std::vector<std::vector<std::array<int, 2>>>> greedyBestFirstSearch(std::array<int, 2> source, std::array<int, 2> target, int gridRow, int gridCol, MainFrame *mainFramePtr, bool showAnimation=false);
 
 // return: numOfCellsVisited, numOfCellCheckingOccurrence, minTravelCost, prev
